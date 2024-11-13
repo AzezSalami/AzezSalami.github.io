@@ -6,144 +6,160 @@
     <title>Dice Roller</title>
     <link rel="stylesheet" href="css/styles.css" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #2c3e50;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #2c3e50;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        color: white;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .table {
+        width: 70%;
+        height: 300px;
+        background: #1a472a;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        perspective: 1000px;
+      }
+
+      .die {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        transform-style: preserve-3d;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .rolling {
+        animation: roll 1.5s ease-out forwards;
+      }
+
+      @keyframes roll {
+        0% {
+          transform: translateY(0) rotateX(0) rotateY(0) rotateZ(0);
         }
-
-        h1 { color: white; }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+        30% {
+          transform: translateY(-150px) rotateX(720deg) rotateY(360deg)
+            rotateZ(180deg);
         }
-
-        .table {
-            width: 70%;
-            height: 300px;
-            background: #1a472a;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            perspective: 1000px;
+        50% {
+          transform: translateY(-100px) rotateX(1440deg) rotateY(720deg)
+            rotateZ(360deg);
         }
-
-        .die {
-            width: 80px;
-            height: 80px;
-            position: relative;
-            transform-style: preserve-3d;
-            cursor: pointer;
-            flex-shrink: 0;
+        75% {
+          transform: translateY(-50px) rotateX(1800deg) rotateY(1080deg)
+            rotateZ(720deg);
         }
-
-        .rolling {
-            animation: roll 1.5s ease-out forwards;
+        100% {
+          transform: translateY(0) var(--final-state);
         }
+      }
 
-        @keyframes roll {
-            0% { 
-                transform: translateY(0) rotateX(0) rotateY(0) rotateZ(0);
-            }
-            30% {
-                transform: translateY(-150px) rotateX(720deg) rotateY(360deg) rotateZ(180deg);
-            }
-            50% {
-                transform: translateY(-100px) rotateX(1440deg) rotateY(720deg) rotateZ(360deg);
-            }
-            75% {
-                transform: translateY(-50px) rotateX(1800deg) rotateY(1080deg) rotateZ(720deg);
-            }
-            100% { 
-                transform: translateY(0) var(--final-state);
-            }
-        }
+      .face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: white;
+        border: 2px solid #ddd;
+        display: grid;
+        grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+        padding: 6px;
+        box-sizing: border-box;
+        border-radius: 10px;
+      }
 
-        .face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: white;
-            border: 2px solid #ddd;
-            display: grid;
-            grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-            padding: 6px;
-            box-sizing: border-box;
-            border-radius: 10px;
-        }
+      .dot {
+        background: #333;
+        border-radius: 50%;
+        margin: 2px;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+      }
 
-        .dot {
-            background: #333;
-            border-radius: 50%;
-            margin: 2px;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
-        }
+      .front {
+        transform: translateZ(40px);
+      }
+      .back {
+        transform: rotateY(180deg) translateZ(40px);
+      }
+      .right {
+        transform: rotateY(90deg) translateZ(40px);
+      }
+      .left {
+        transform: rotateY(-90deg) translateZ(40px);
+      }
+      .top {
+        transform: rotateX(90deg) translateZ(40px);
+      }
+      .bottom {
+        transform: rotateX(-90deg) translateZ(40px);
+      }
 
-        .front  { transform: translateZ(40px); }
-        .back   { transform: rotateY(180deg) translateZ(40px); }
-        .right  { transform: rotateY(90deg) translateZ(40px); }
-        .left   { transform: rotateY(-90deg) translateZ(40px); }
-        .top    { transform: rotateX(90deg) translateZ(40px); }
-        .bottom { transform: rotateX(-90deg) translateZ(40px); }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+      button:hover {
+        background: #2980b9;
+      }
 
-        button:hover {
-            background: #2980b9;
-        }
+      button:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+      }
 
-        button:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-        }
+      .total {
+        background: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-top: 20px;
+        font-size: 20px;
+      }
 
-        .total {
-            background: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-size: 20px;
-        }
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+        background: white;
+      }
 
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: none;
-            background: white;
-        }
-
-        .info {
-            color: white;
-            margin-top: 10px;
-            font-style: italic;
-        }
+      .info {
+        color: white;
+        margin-top: 10px;
+        font-style: italic;
+      }
     </style>
-        <link rel="stylesheet" href="css/styles.css" />
-
-</head>
-<body>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
     <button id="toggle-btn">☰</button>
 
     <div id="drawer">
@@ -154,131 +170,162 @@
         <a href="index.html" class="nav-link">Snake Game</a>
         <a href="dice.html" class="nav-link">Dice</a>
         <a href="compare.html" class="nav-link">Text Compare</a>
+        <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+        <a href="image-to-base64.html" class="nav-link">Image to base64</a>
         <a href="about.html" class="nav-link">About</a>
       </div>
     </div>
 
     <h1>Dice Roller</h1>
     <div class="controls">
-        <select id="diceCount" onchange="updateDiceCount()">
-            <option value="1">1 Die</option>
-            <option value="2" selected>2 Dice</option>
-            <option value="3">3 Dice</option>
-            <option value="4">4 Dice</option>
-            <option value="5">5 Dice</option>
-            <option value="6">6 Dice</option>
-            <option value="8">8 Dice</option>
-            <option value="10">10 Dice</option>
-        </select>
-        <button onclick="rollAll()" id="rollButton">Roll Dice</button>
+      <select id="diceCount" onchange="updateDiceCount()">
+        <option value="1">1 Die</option>
+        <option value="2" selected>2 Dice</option>
+        <option value="3">3 Dice</option>
+        <option value="4">4 Dice</option>
+        <option value="5">5 Dice</option>
+        <option value="6">6 Dice</option>
+        <option value="8">8 Dice</option>
+        <option value="10">10 Dice</option>
+      </select>
+      <button onclick="rollAll()" id="rollButton">Roll Dice</button>
     </div>
-    <div class="table" id="diceContainer">
-    </div>
+    <div class="table" id="diceContainer"></div>
     <div class="total">Total: 0</div>
-    <div class="info">Click individual dice or use the Roll button to roll all dice</div>
+    <div class="info">
+      Click individual dice or use the Roll button to roll all dice
+    </div>
 
     <script>
-        const diceContainer = document.getElementById('diceContainer');
-        const rollButton = document.getElementById('rollButton');
-        let isRolling = false;
+      const diceContainer = document.getElementById("diceContainer");
+      const rollButton = document.getElementById("rollButton");
+      let isRolling = false;
 
-        function createDots(face, number) {
-            while (face.firstChild) {
-                face.removeChild(face.firstChild);
-            }
-
-            const positions = {
-                1: [{ row: 2, col: 2 }],
-                2: [{ row: 1, col: 1 }, { row: 3, col: 3 }],
-                3: [{ row: 1, col: 1 }, { row: 2, col: 2 }, { row: 3, col: 3 }],
-                4: [{ row: 1, col: 1 }, { row: 1, col: 3 }, { row: 3, col: 1 }, { row: 3, col: 3 }],
-                5: [{ row: 1, col: 1 }, { row: 1, col: 3 }, { row: 2, col: 2 }, { row: 3, col: 1 }, { row: 3, col: 3 }],
-                6: [{ row: 1, col: 1 }, { row: 1, col: 3 }, { row: 2, col: 1 }, { row: 2, col: 3 }, { row: 3, col: 1 }, { row: 3, col: 3 }]
-            };
-
-            positions[number].forEach(pos => {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                dot.style.gridRow = pos.row;
-                dot.style.gridColumn = pos.col;
-                face.appendChild(dot);
-            });
+      function createDots(face, number) {
+        while (face.firstChild) {
+          face.removeChild(face.firstChild);
         }
 
-        function createDie() {
-            const die = document.createElement('div');
-            die.className = 'die';
-            
-            const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
-            faces.forEach((faceName, index) => {
-                const face = document.createElement('div');
-                face.className = `face ${faceName}`;
-                createDots(face, index + 1);
-                die.appendChild(face);
-            });
+        const positions = {
+          1: [{ row: 2, col: 2 }],
+          2: [
+            { row: 1, col: 1 },
+            { row: 3, col: 3 },
+          ],
+          3: [
+            { row: 1, col: 1 },
+            { row: 2, col: 2 },
+            { row: 3, col: 3 },
+          ],
+          4: [
+            { row: 1, col: 1 },
+            { row: 1, col: 3 },
+            { row: 3, col: 1 },
+            { row: 3, col: 3 },
+          ],
+          5: [
+            { row: 1, col: 1 },
+            { row: 1, col: 3 },
+            { row: 2, col: 2 },
+            { row: 3, col: 1 },
+            { row: 3, col: 3 },
+          ],
+          6: [
+            { row: 1, col: 1 },
+            { row: 1, col: 3 },
+            { row: 2, col: 1 },
+            { row: 2, col: 3 },
+            { row: 3, col: 1 },
+            { row: 3, col: 3 },
+          ],
+        };
 
-            die.addEventListener('click', () => !isRolling && rollDie(die));
-            return die;
+        positions[number].forEach((pos) => {
+          const dot = document.createElement("div");
+          dot.className = "dot";
+          dot.style.gridRow = pos.row;
+          dot.style.gridColumn = pos.col;
+          face.appendChild(dot);
+        });
+      }
+
+      function createDie() {
+        const die = document.createElement("div");
+        die.className = "die";
+
+        const faces = ["front", "back", "right", "left", "top", "bottom"];
+        faces.forEach((faceName, index) => {
+          const face = document.createElement("div");
+          face.className = `face ${faceName}`;
+          createDots(face, index + 1);
+          die.appendChild(face);
+        });
+
+        die.addEventListener("click", () => !isRolling && rollDie(die));
+        return die;
+      }
+
+      const rotations = [
+        "rotateX(0) rotateY(0) rotateZ(0)", // 1
+        "rotateX(0) rotateY(180deg) rotateZ(0)", // 2
+        "rotateX(0) rotateY(-90deg) rotateZ(0)", // 3
+        "rotateX(0) rotateY(90deg) rotateZ(0)", // 4
+        "rotateX(-90deg) rotateY(0) rotateZ(0)", // 5
+        "rotateX(90deg) rotateY(0) rotateZ(0)", // 6
+      ];
+
+      async function rollDie(die) {
+        const result = Math.floor(Math.random() * 6) + 1;
+        die.dataset.value = result;
+
+        die.classList.remove("rolling");
+        void die.offsetWidth;
+
+        die.style.setProperty("--final-state", rotations[result - 1]);
+        die.classList.add("rolling");
+
+        return new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+
+      async function rollAll() {
+        if (isRolling) return;
+
+        isRolling = true;
+        rollButton.disabled = true;
+
+        const dice = document.querySelectorAll(".die");
+        await Promise.all([...dice].map((die) => rollDie(die)));
+
+        updateTotal();
+        isRolling = false;
+        rollButton.disabled = false;
+      }
+
+      function updateTotal() {
+        const dice = document.querySelectorAll(".die");
+        const total = [...dice].reduce(
+          (sum, die) => sum + parseInt(die.dataset.value),
+          0
+        );
+        document.querySelector(".total").textContent = `Total: ${total | 0}`;
+      }
+
+      function updateDiceCount() {
+        if (isRolling) return;
+
+        const count = parseInt(document.getElementById("diceCount").value);
+        diceContainer.innerHTML = "";
+
+        for (let i = 0; i < count; i++) {
+          diceContainer.appendChild(createDie());
         }
 
-        const rotations = [
-            "rotateX(0) rotateY(0) rotateZ(0)",      // 1
-            "rotateX(0) rotateY(180deg) rotateZ(0)", // 2
-            "rotateX(0) rotateY(-90deg) rotateZ(0)", // 3
-            "rotateX(0) rotateY(90deg) rotateZ(0)",  // 4
-            "rotateX(-90deg) rotateY(0) rotateZ(0)", // 5
-            "rotateX(90deg) rotateY(0) rotateZ(0)"   // 6
-        ];
+        updateTotal();
+      }
 
-        async function rollDie(die) {
-            const result = Math.floor(Math.random() * 6) + 1;
-            die.dataset.value = result;
-
-            die.classList.remove('rolling');
-            void die.offsetWidth;
-
-            die.style.setProperty('--final-state', rotations[result - 1]);
-            die.classList.add('rolling');
-
-            return new Promise(resolve => setTimeout(resolve, 1500));
-        }
-
-        async function rollAll() {
-            if (isRolling) return;
-            
-            isRolling = true;
-            rollButton.disabled = true;
-            
-            const dice = document.querySelectorAll('.die');
-            await Promise.all([...dice].map(die => rollDie(die)));
-            
-            updateTotal();
-            isRolling = false;
-            rollButton.disabled = false;
-        }
-
-        function updateTotal() {
-            const dice = document.querySelectorAll('.die');
-            const total = [...dice].reduce((sum, die) => sum + parseInt(die.dataset.value), 0);
-            document.querySelector('.total').textContent = `Total: ${total | 0}`;
-        }
-
-        function updateDiceCount() {
-            if (isRolling) return;
-            
-            const count = parseInt(document.getElementById('diceCount').value);
-            diceContainer.innerHTML = '';
-            
-            for (let i = 0; i < count; i++) {
-                diceContainer.appendChild(createDie());
-            }
-            
-            updateTotal();
-        }
-
-        // Initialize with default number of dice
-        updateDiceCount();
+      // Initialize with default number of dice
+      updateDiceCount();
     </script>
-        <script src="js/main.js"></script>
-</body>
+    <script src="js/main.js"></script>
+  </body>
 </html>
