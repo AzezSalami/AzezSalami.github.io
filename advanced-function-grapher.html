@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Function Grapher</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #000;
+        }
+        #functionInput {
+            width: 300px;
+            padding: 5px;
+            margin: 10px 0;
+        }
+        .examples {
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+            <link rel="stylesheet" href="css/styles.css" />
+
+</head>
+<body>
+    <button id="toggle-btn">☰</button>
+
+    <div id="drawer">
+      <div id="drawer-header">
+        <h2>Navigation</h2>
+      </div>
+      <div id="drawer-content">
+        <a href="index.html" class="nav-link">Snake Game</a>
+        <a href="dice.html" class="nav-link">Dice</a>
+        <a href="coin.html" class="nav-link">Coin</a>
+        <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+        <a href="compare.html" class="nav-link">Text Compare</a>
+        <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+        <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+        <a href="about.html" class="nav-link">About</a>
+      </div>
+    </div>
+    <div class="container">
+        <h2>Advanced Function Grapher</h2>
+        <input type="text" id="functionInput" placeholder="Enter mathematical function" value="x^2 ± 1">
+        <button onclick="plotFunction()">Graph Function</button>
+        <div class="examples">
+            Examples: x^2 ± 1, ±x, sin(x) ± 0.5
+        </div>
+        <br>
+        <canvas id="graphCanvas" width="600" height="500"></canvas>
+        <div id="errorMessage" style="color: red;"></div>
+    </div>
+
+    <script>
+        function replaceAllPlusMinus(functionStr) {
+            // Generate two versions of the function: one with + and one with -
+            const plusVersion = functionStr.replace(/±/g, '+');
+            const minusVersion = functionStr.replace(/±/g, '-');
+            return [plusVersion, minusVersion];
+        }
+
+        function plotFunction() {
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+            const functionInput = document.getElementById('functionInput').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Clear previous graph and error message
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            errorMessage.textContent = '';
+
+            // Draw axes
+            drawAxes(ctx, canvas);
+
+            // Plot the function(s)
+            try {
+                const functions = replaceAllPlusMinus(functionInput);
+                
+                // Plot each function variation
+                functions.forEach((func, index) => {
+                    plotGraph(ctx, canvas, func, index === 0 ? 'blue' : 'red');
+                });
+            } catch (error) {
+                errorMessage.textContent = 'Invalid function. Please check your input.';
+                console.error(error);
+            }
+        }
+
+        function drawAxes(ctx, canvas) {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Clear canvas with white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw grid lines
+            ctx.beginPath();
+            ctx.strokeStyle = '#e0e0e0';
+            for (let x = 0; x < width; x += 50) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+            }
+            for (let y = 0; y < height; y += 50) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+            }
+            ctx.stroke();
+
+            // Draw X and Y axes
+            ctx.beginPath();
+            ctx.moveTo(0, height/2);
+            ctx.lineTo(width, height/2);
+            ctx.moveTo(width/2, 0);
+            ctx.lineTo(width/2, height);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Reset line width
+            ctx.lineWidth = 1;
+        }
+
+        function plotGraph(ctx, canvas, functionStr, color) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 50; // pixels per unit
+
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+
+            let prevValidPoint = null;
+
+            for (let pixelX = 0; pixelX < width; pixelX++) {
+                // Convert pixel x to mathematical x
+                const x = (pixelX - centerX) / scale;
+                
+                // Skip undefined or complex values
+                try {
+                    // Evaluate the function
+                    const y = math.evaluate(functionStr, {x: x});
+                    
+                    // Check if y is a valid number
+                    if (isNaN(y) || !isFinite(y)) {
+                        prevValidPoint = null;
+                        continue;
+                    }
+
+                    // Convert mathematical y to pixel y
+                    const pixelY = centerY - y * scale;
+
+                    // Draw line
+                    if (prevValidPoint !== null) {
+                        ctx.lineTo(pixelX, pixelY);
+                    } else {
+                        ctx.moveTo(pixelX, pixelY);
+                    }
+
+                    prevValidPoint = {x: pixelX, y: pixelY};
+                } catch (error) {
+                    prevValidPoint = null;
+                }
+            }
+
+            ctx.stroke();
+        }
+
+        // Initial plot
+        plotFunction();
+    </script>
+</body>
+</html>
