@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Case Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .converter-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #3367d6;
+        }
+
+        .output-container {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .case-info {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .case-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .case-example {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .detected-case {
+            background-color: #e6f7ff;
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1890ff;
+        }
+
+        .detected-case p {
+            margin: 5px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+    <button id="toggle-btn">☰</button>
+
+    <div id="drawer">
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+        <div id="drawer-content">
+            <a href="index.html" class="nav-link">Snake Game</a>
+            <a href="dice.html" class="nav-link">Dice</a>
+            <a href="coin.html" class="nav-link">Coin</a>
+            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+            <a href="compare.html" class="nav-link">Text Compare</a>
+            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+            <a href="case-converter.html" class="nav-link">String Case Converter</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+    <div id="main-content">
+
+        <h1>String Case Converter</h1>
+
+        <div class="converter-container">
+            <div class="form-group">
+                <label for="inputText">Enter text to convert:</label>
+                <input type="text" id="inputText" placeholder="Type your text here" />
+            </div>
+
+            <div class="detected-case" id="detectedCase">
+                <p><strong>Detected Case:</strong> <span id="caseTypeDetected">None</span></p>
+            </div>
+
+            <div class="form-group">
+                <label for="caseType">Convert to:</label>
+                <select id="caseType">
+                    <option value="camelCase">camelCase (lowerCamelCase)</option>
+                    <option value="PascalCase">PascalCase (UpperCamelCase)</option>
+                    <option value="snake_case">snake_case</option>
+                    <option value="kebab-case">kebab-case</option>
+                    <option value="SCREAMING_SNAKE_CASE">SCREAMING_SNAKE_CASE</option>
+                    <option value="Train-Case">Train-Case</option>
+                    <option value="flatcase">flatcase</option>
+                    <option value="MACRO_CASE">MACRO_CASE</option>
+                    <option value="Camel_Snake_Case">Camel_Snake_Case</option>
+                    <option value="Pascal_Snake_Case">Pascal_Snake_Case</option>
+                </select>
+            </div>
+
+            <button id="convertBtn">Convert</button>
+
+            <div class="output-container">
+                <label for="outputText">Result:</label>
+                <input type="text" id="outputText" readonly />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add event listeners
+        document.getElementById('convertBtn').addEventListener('click', convertText);
+        document.getElementById('inputText').addEventListener('input', detectCase);
+
+        // Detect the case of the input text
+        function detectCase() {
+            const inputText = document.getElementById('inputText').value;
+            const caseTypeDetected = document.getElementById('caseTypeDetected');
+
+            if (!inputText) {
+                caseTypeDetected.textContent = 'None';
+                return;
+            }
+
+            // Check if the text contains spaces
+            if (inputText.includes(' ')) {
+                caseTypeDetected.textContent = 'Space-separated text';
+                return;
+            }
+
+            // Check for camelCase specifically (has uppercase letters but not as first character)
+            if (/^[a-z][a-zA-Z0-9]*$/.test(inputText) && /[A-Z]/.test(inputText)) {
+                caseTypeDetected.textContent = 'camelCase (lowerCamelCase)';
+                return;
+            }
+
+            // Check for PascalCase (starts with uppercase and has mixed case)
+            if (/^[A-Z][a-zA-Z0-9]*$/.test(inputText) && /[a-z]/.test(inputText)) {
+                caseTypeDetected.textContent = 'PascalCase (UpperCamelCase)';
+                return;
+            }
+
+            // Check for snake_case
+            if (/^[a-z][a-z0-9]*(_[a-z0-9]+)*$/.test(inputText) && inputText.includes('_')) {
+                caseTypeDetected.textContent = 'snake_case';
+                return;
+            }
+
+            // Check for kebab-case
+            if (/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(inputText) && inputText.includes('-')) {
+                caseTypeDetected.textContent = 'kebab-case';
+                return;
+            }
+
+            // Check for SCREAMING_SNAKE_CASE
+            if (/^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$/.test(inputText) && inputText.includes('_')) {
+                caseTypeDetected.textContent = 'SCREAMING_SNAKE_CASE / MACRO_CASE';
+                return;
+            }
+
+            // Check for Train-Case
+            if (/^[A-Z][a-z0-9]*(-[A-Z][a-z0-9]*)+$/.test(inputText) && inputText.includes('-')) {
+                caseTypeDetected.textContent = 'Train-Case';
+                return;
+            }
+
+            // Check for flatcase
+            if (/^[a-z]+$/.test(inputText)) {
+                caseTypeDetected.textContent = 'flatcase';
+                return;
+            }
+
+            // Check for Camel_Snake_Case or Pascal_Snake_Case
+            if (/^[A-Z][a-z0-9]*(_[A-Z][a-z0-9]*)+$/.test(inputText)) {
+                caseTypeDetected.textContent = 'Camel_Snake_Case / Pascal_Snake_Case';
+                return;
+            }
+
+            // If no pattern matches
+            caseTypeDetected.textContent = 'Unknown or mixed format';
+        }
+
+        function convertText() {
+            const inputText = document.getElementById('inputText').value;
+            const caseType = document.getElementById('caseType').value;
+            const outputField = document.getElementById('outputText');
+
+            if (!inputText) {
+                outputField.value = '';
+                return;
+            }
+
+            // First, identify words in the input text regardless of its current format
+            let words = [];
+
+            // Check if input contains spaces
+            if (inputText.includes(' ')) {
+                words = inputText.split(' ').filter(word => word.trim().length > 0);
+            }
+            // Check if input contains underscores
+            else if (inputText.includes('_')) {
+                words = inputText.split('_');
+            }
+            // Check if input contains hyphens
+            else if (inputText.includes('-')) {
+                words = inputText.split('-');
+            }
+            // Check for camelCase or PascalCase
+            else if (/[A-Z]/.test(inputText)) {
+                // Split by capital letters, preserving the capital letter with the word
+                const pieces = inputText.split(/(?=[A-Z])/);
+                // Handle the first word in PascalCase specially if it starts with a capital
+                if (/^[A-Z]/.test(inputText)) {
+                    // If the first character is uppercase, we need to make sure it's properly handled
+                    const firstPiece = pieces[0];
+                    words = [firstPiece];
+                    // Add the rest of the pieces
+                    words = words.concat(pieces.slice(1));
+                } else {
+                    words = pieces;
+                }
+            }
+            // Must be flatcase or a single word
+            else {
+                words = [inputText];
+            }
+
+            // Filter out any empty strings
+            words = words.filter(word => word.trim().length > 0);
+
+            let result = '';
+
+            switch (caseType) {
+                case 'camelCase':
+                    result = words.map((word, index) => {
+                        const cleanWord = word.toLowerCase();
+                        return index === 0
+                            ? cleanWord
+                            : cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+                    }).join('');
+                    break;
+
+                case 'PascalCase':
+                    result = words.map(word => {
+                        const cleanWord = word.toLowerCase();
+                        return cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+                    }).join('');
+                    break;
+
+                case 'snake_case':
+                    result = words.map(word => word.toLowerCase()).join('_');
+                    break;
+
+                case 'kebab-case':
+                    result = words.map(word => word.toLowerCase()).join('-');
+                    break;
+
+                case 'SCREAMING_SNAKE_CASE':
+                case 'MACRO_CASE':
+                    result = words.map(word => word.toUpperCase()).join('_');
+                    break;
+
+                case 'Train-Case':
+                    result = words.map(word => {
+                        const cleanWord = word.toLowerCase();
+                        return cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+                    }).join('-');
+                    break;
+
+                case 'flatcase':
+                    result = words.map(word => word.toLowerCase()).join('');
+                    break;
+
+                case 'Camel_Snake_Case':
+                case 'Pascal_Snake_Case':
+                    result = words.map(word => {
+                        const cleanWord = word.toLowerCase();
+                        return cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+                    }).join('_');
+                    break;
+            }
+
+            outputField.value = result;
+        }
+
+        // Initialize case detection when page loads
+        window.onload = function () {
+            detectCase();
+        };
+    </script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

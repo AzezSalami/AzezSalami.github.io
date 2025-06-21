@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Advanced Function Grapher</title>
@@ -14,47 +15,53 @@
             margin: 0;
             background-color: #f0f0f0;
         }
+
         .container {
             background-color: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
+
         canvas {
             border: 1px solid #000;
         }
+
         #functionInput {
             width: 300px;
             padding: 5px;
             margin: 10px 0;
         }
+
         .examples {
             margin-top: 10px;
             font-size: 0.8em;
             color: #666;
         }
     </style>
-            <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 
 </head>
+
 <body>
     <button id="toggle-btn">☰</button>
 
     <div id="drawer">
-      <div id="drawer-header">
-        <h2>Navigation</h2>
-      </div>
-      <div id="drawer-content">
-        <a href="index.html" class="nav-link">Snake Game</a>
-        <a href="dice.html" class="nav-link">Dice</a>
-        <a href="coin.html" class="nav-link">Coin</a>
-        <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-        <a href="compare.html" class="nav-link">Text Compare</a>
-        <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-        <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-        <a href="about.html" class="nav-link">About</a>
-      </div>
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+        <div id="drawer-content">
+            <a href="index.html" class="nav-link">Snake Game</a>
+            <a href="dice.html" class="nav-link">Dice</a>
+            <a href="coin.html" class="nav-link">Coin</a>
+            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+            <a href="compare.html" class="nav-link">Text Compare</a>
+            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+            <a href="case-converter.html" class="nav-link">String Case Converter</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
     </div>
     <div class="container">
         <h2>Advanced Function Grapher</h2>
@@ -92,7 +99,7 @@
             // Plot the function(s)
             try {
                 const functions = replaceAllPlusMinus(functionInput);
-                
+
                 // Plot each function variation
                 functions.forEach((func, index) => {
                     plotGraph(ctx, canvas, func, index === 0 ? 'blue' : 'red');
@@ -126,10 +133,10 @@
 
             // Draw X and Y axes
             ctx.beginPath();
-            ctx.moveTo(0, height/2);
-            ctx.lineTo(width, height/2);
-            ctx.moveTo(width/2, 0);
-            ctx.lineTo(width/2, height);
+            ctx.moveTo(0, height / 2);
+            ctx.lineTo(width, height / 2);
+            ctx.moveTo(width / 2, 0);
+            ctx.lineTo(width / 2, height);
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
             ctx.stroke();
@@ -153,12 +160,12 @@
             for (let pixelX = 0; pixelX < width; pixelX++) {
                 // Convert pixel x to mathematical x
                 const x = (pixelX - centerX) / scale;
-                
+
                 // Skip undefined or complex values
                 try {
                     // Evaluate the function
-                    const y = math.evaluate(functionStr, {x: x});
-                    
+                    const y = math.evaluate(functionStr, { x: x });
+
                     // Check if y is a valid number
                     if (isNaN(y) || !isFinite(y)) {
                         prevValidPoint = null;
@@ -175,7 +182,7 @@
                         ctx.moveTo(pixelX, pixelY);
                     }
 
-                    prevValidPoint = {x: pixelX, y: pixelY};
+                    prevValidPoint = { x: pixelX, y: pixelY };
                 } catch (error) {
                     prevValidPoint = null;
                 }
@@ -188,4 +195,5 @@
         plotFunction();
     </script>
 </body>
+
 </html>

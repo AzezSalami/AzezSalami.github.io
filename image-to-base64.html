@@ -1,181 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image to Base64 Converter</title>
-    <link rel="stylesheet" href="css/styles.css" />
-    <style>
-      body {
-        font-family: system-ui, -apple-system, sans-serif;
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-        line-height: 1.5;
-      }
 
-      .drop-zone {
-        border: 2px dashed #ccc;
-        border-radius: 8px;
-        padding: 2rem;
-        text-align: center;
-        margin: 1rem 0;
-        transition: border-color 0.3s ease;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to Base64 Converter</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
 
-      .drop-zone.dragover {
-        border-color: #007bff;
-        background-color: #f8f9fa;
-      }
+    .drop-zone {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin: 1rem 0;
+      transition: border-color 0.3s ease;
+    }
 
-      .preview {
-        max-width: 300px;
-        max-height: 300px;
-        margin: 1rem auto;
-        display: none;
-      }
+    .drop-zone.dragover {
+      border-color: #007bff;
+      background-color: #f8f9fa;
+    }
 
-      .result {
-        margin-top: 1rem;
-      }
+    .preview {
+      max-width: 300px;
+      max-height: 300px;
+      margin: 1rem auto;
+      display: none;
+    }
 
-      textarea {
-        width: 100%;
-        height: 150px;
-        margin-top: 0.5rem;
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        resize: vertical;
-      }
+    .result {
+      margin-top: 1rem;
+    }
 
-      button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 0.5rem;
-      }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
 
-      button:hover {
-        background-color: #0056b3;
-      }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
 
-      #file-input {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="toggle-btn">☰</button>
+    button:hover {
+      background-color: #0056b3;
+    }
 
-    <div id="drawer">
-      <div id="drawer-header">
-        <h2>Navigation</h2>
-      </div>
-      <div id="drawer-content">
-        <a href="index.html" class="nav-link">Snake Game</a>
-        <a href="dice.html" class="nav-link">Dice</a>
-        <a href="coin.html" class="nav-link">Coin</a>
-        <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-        <a href="compare.html" class="nav-link">Text Compare</a>
-        <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-        <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-        <a href="about.html" class="nav-link">About</a>
-      </div>
+    #file-input {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="toggle-btn">☰</button>
+
+  <div id="drawer">
+    <div id="drawer-header">
+      <h2>Navigation</h2>
     </div>
-    <div id="main-content">
-      <h1>Image to Base64 Converter</h1>
+    <div id="drawer-content">
+      <a href="index.html" class="nav-link">Snake Game</a>
+      <a href="dice.html" class="nav-link">Dice</a>
+      <a href="coin.html" class="nav-link">Coin</a>
+      <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+      <a href="compare.html" class="nav-link">Text Compare</a>
+      <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+      <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+      <a href="case-converter.html" class="nav-link">String Case Converter</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+  </div>
+  <div id="main-content">
+    <h1>Image to Base64 Converter</h1>
 
-      <div class="drop-zone" id="dropZone">
-        <p>Drag and drop an image here or click to select</p>
-        <input type="file" accept="image/*" id="file-input" />
-      </div>
-
-      <img id="preview" class="preview" alt="Preview" />
-
-      <div class="result" id="result" style="display: none">
-        <h2>Base64 Output</h2>
-        <textarea id="output" readonly></textarea>
-        <button onclick="copyToClipboard()">Copy to Clipboard</button>
-      </div>
+    <div class="drop-zone" id="dropZone">
+      <p>Drag and drop an image here or click to select</p>
+      <input type="file" accept="image/*" id="file-input" />
     </div>
 
-    <script>
-      const dropZone = document.getElementById("dropZone");
-      const fileInput = document.getElementById("file-input");
-      const preview = document.getElementById("preview");
-      const result = document.getElementById("result");
-      const output = document.getElementById("output");
+    <img id="preview" class="preview" alt="Preview" />
 
-      // Handle drag and drop events
-      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-        dropZone.addEventListener(eventName, preventDefaults);
+    <div class="result" id="result" style="display: none">
+      <h2>Base64 Output</h2>
+      <textarea id="output" readonly></textarea>
+      <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("file-input");
+    const preview = document.getElementById("preview");
+    const result = document.getElementById("result");
+    const output = document.getElementById("output");
+
+    // Handle drag and drop events
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+      dropZone.addEventListener(eventName, preventDefaults);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+      dropZone.addEventListener(eventName, () => {
+        dropZone.classList.add("dragover");
       });
+    });
 
-      function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      ["dragenter", "dragover"].forEach((eventName) => {
-        dropZone.addEventListener(eventName, () => {
-          dropZone.classList.add("dragover");
-        });
+    ["dragleave", "drop"].forEach((eventName) => {
+      dropZone.addEventListener(eventName, () => {
+        dropZone.classList.remove("dragover");
       });
+    });
 
-      ["dragleave", "drop"].forEach((eventName) => {
-        dropZone.addEventListener(eventName, () => {
-          dropZone.classList.remove("dragover");
-        });
-      });
+    // Handle file drop
+    dropZone.addEventListener("drop", handleDrop);
+    dropZone.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", handleFileSelect);
 
-      // Handle file drop
-      dropZone.addEventListener("drop", handleDrop);
-      dropZone.addEventListener("click", () => fileInput.click());
-      fileInput.addEventListener("change", handleFileSelect);
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles(files);
+    }
 
-      function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        handleFiles(files);
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      handleFiles(files);
+    }
+
+    function handleFiles(files) {
+      if (files.length === 0) return;
+
+      const file = files[0];
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return;
       }
 
-      function handleFileSelect(e) {
-        const files = e.target.files;
-        handleFiles(files);
-      }
+      // Show preview
+      preview.style.display = "block";
+      preview.file = file;
 
-      function handleFiles(files) {
-        if (files.length === 0) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.src = e.target.result;
+        output.value = e.target.result;
+        result.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
 
-        const file = files[0];
-        if (!file.type.startsWith("image/")) {
-          alert("Please select an image file.");
-          return;
-        }
+    function copyToClipboard() {
+      output.select();
+      document.execCommand("copy");
+      alert("Copied to clipboard!");
+    }
+  </script>
+  <script src="js/main.js"></script>
+</body>
 
-        // Show preview
-        preview.style.display = "block";
-        preview.file = file;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          preview.src = e.target.result;
-          output.value = e.target.result;
-          result.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      }
-
-      function copyToClipboard() {
-        output.select();
-        document.execCommand("copy");
-        alert("Copied to clipboard!");
-      }
-    </script>
-    <script src="js/main.js"></script>
-  </body>
 </html>
