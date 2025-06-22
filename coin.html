@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Coin Flip Simulator</title>
@@ -13,11 +14,13 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
+
         .coin-container {
             perspective: 1000px;
             width: 200px;
             height: 200px;
         }
+
         .coin {
             width: 150px;
             height: 150px;
@@ -27,7 +30,9 @@
             cursor: pointer;
             transition: transform 0.6s;
         }
-        .coin-front, .coin-back {
+
+        .coin-front,
+        .coin-back {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -39,87 +44,182 @@
             font-size: 2rem;
             font-weight: bold;
         }
+
         .coin-front {
-            background: linear-gradient(135deg, #FFD700, #DAA520);
+            background: url('tails-image.jpg') no-repeat center center;
+            background-size: cover;
             transform: rotateY(0deg);
             border: 5px solid #B8860B;
         }
+
         .coin-back {
-            background: linear-gradient(135deg, #C0C0C0, #708090);
+            background: url('heads-image.jpg') no-repeat center center;
+            background-size: cover;
+
             transform: rotateY(180deg);
             border: 5px solid #696969;
         }
+
         .coin.flipped {
             transform: rotateY(180deg);
         }
+
         .coin.flip-animation {
             animation: coinFlip 1s linear;
         }
+
         @keyframes coinFlip {
-            0% { transform: translateY(0) rotateX(0deg); }
-            5% { transform: translateY(-50px) rotateX(10deg); }
-            10% { transform: translateY(-100px) rotateX(200deg); }
-            15% { transform: translateY(-150px) rotateX(30deg); }
-            20% { transform: translateY(-200px) rotateX(300deg); }
-            25% { transform: translateY(-250px) rotateX(50deg); }
-            30% { transform: translateY(-300px) rotateX(320deg); }
-            35% { transform: translateY(-350px) rotateX(70deg); }
-            40% { transform: translateY(-400px) rotateX(220deg); }
-            45% { transform: translateY(-450px) rotateX(90deg); }
-            50% { transform: translateY(-400px) rotateX(300deg); }
-            55% { transform: translateY(-350px) rotateX(110deg); }
-            60% { transform: translateY(-300px) rotateX(350deg); }
-            65% { transform: translateY(-250px) rotateX(130deg); }
-            70% { transform: translateY(-200px) rotateX(240deg); }
-            75% { transform: translateY(-150px) rotateX(150deg); }
-            80% { transform: translateY(-100px) rotateX(260deg); }
-            85% { transform: translateY(-50px) rotateX(170deg); }
-            91% { transform: translateY(-25px) rotateX(280deg); }
-            92% { transform: translateY(-10px) rotateX(190deg); }
-            93% { transform: translateY(-9px) rotateX(100deg); }
-            94% { transform: translateY(-8px) rotateX(90deg); }
-            95% { transform: translateY(-7px) rotateX(450deg); }
-            96% { transform: translateY(-6px) rotateX(30deg); }
-            97% { transform: translateY(-5px) rotateX(20deg); }
-            98% { transform: translateY(-3px) rotateX(10deg); }
-            99% { transform: translateY(-1px) rotateX(5deg); }
-            100% { transform: translateY(0) rotateX(0deg); }
+            0% {
+                transform: translateY(0) rotateX(0deg);
+            }
+
+            5% {
+                transform: translateY(-50px) rotateX(10deg);
+            }
+
+            10% {
+                transform: translateY(-100px) rotateX(200deg);
+            }
+
+            15% {
+                transform: translateY(-150px) rotateX(30deg);
+            }
+
+            20% {
+                transform: translateY(-200px) rotateX(300deg);
+            }
+
+            25% {
+                transform: translateY(-250px) rotateX(50deg);
+            }
+
+            30% {
+                transform: translateY(-300px) rotateX(320deg);
+            }
+
+            35% {
+                transform: translateY(-350px) rotateX(70deg);
+            }
+
+            40% {
+                transform: translateY(-400px) rotateX(220deg);
+            }
+
+            45% {
+                transform: translateY(-450px) rotateX(90deg);
+            }
+
+            50% {
+                transform: translateY(-400px) rotateX(300deg);
+            }
+
+            55% {
+                transform: translateY(-350px) rotateX(110deg);
+            }
+
+            60% {
+                transform: translateY(-300px) rotateX(350deg);
+            }
+
+            65% {
+                transform: translateY(-250px) rotateX(130deg);
+            }
+
+            70% {
+                transform: translateY(-200px) rotateX(240deg);
+            }
+
+            75% {
+                transform: translateY(-150px) rotateX(150deg);
+            }
+
+            80% {
+                transform: translateY(-100px) rotateX(260deg);
+            }
+
+            85% {
+                transform: translateY(-50px) rotateX(170deg);
+            }
+
+            91% {
+                transform: translateY(-25px) rotateX(280deg);
+            }
+
+            92% {
+                transform: translateY(-10px) rotateX(190deg);
+            }
+
+            93% {
+                transform: translateY(-9px) rotateX(100deg);
+            }
+
+            94% {
+                transform: translateY(-8px) rotateX(90deg);
+            }
+
+            95% {
+                transform: translateY(-7px) rotateX(450deg);
+            }
+
+            96% {
+                transform: translateY(-6px) rotateX(30deg);
+            }
+
+            97% {
+                transform: translateY(-5px) rotateX(20deg);
+            }
+
+            98% {
+                transform: translateY(-3px) rotateX(10deg);
+            }
+
+            99% {
+                transform: translateY(-1px) rotateX(5deg);
+            }
+
+            100% {
+                transform: translateY(0) rotateX(0deg);
+            }
         }
+
         .result {
             margin-top: 20px;
             font-size: 1.5rem;
             text-align: center;
         }
     </style>
-        <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 
 </head>
+
 <body>
     <button id="toggle-btn">☰</button>
 
     <div id="drawer">
-      <div id="drawer-header">
-        <h2>Navigation</h2>
-      </div>
-      <div id="drawer-content">
-        <a href="index.html" class="nav-link">Snake Game</a>
-        <a href="dice.html" class="nav-link">Dice</a>
-        <a href="coin.html" class="nav-link">Coin</a>
-        <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-        <a href="compare.html" class="nav-link">Text Compare</a>
-        <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-        <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-<a href="case-converter.html" class="nav-link">String Case Converter</a>
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+        <div id="drawer-content">
+            <a href="index.html" class="nav-link">Snake Game</a>
+            <a href="dice.html" class="nav-link">Dice</a>
+            <a href="coin.html" class="nav-link">Coin</a>
+            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+            <a href="compare.html" class="nav-link">Text Compare</a>
+            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+            <a href="case-converter.html" class="nav-link">String Case Converter</a>
             <a href="word-counter.html" class="nav-link">Word Counter</a>
             <a href="days_calculator.html" class="nav-link">Days Calculator</a>
-        <a href="about.html" class="nav-link">About</a>
-      </div>
+            <a href="character_counter.html" class="nav-link">Character Counter</a>
+            <a href="character_counter.html" class="nav-link">Character Counter</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
     </div>
     <div class="container">
         <div class="coin-container">
             <div class="coin" id="coinElement">
-                <div class="coin-front">Heads</div>
-                <div class="coin-back">Tails</div>
+                <div class="coin-front">Tails</div>
+                <div class="coin-back">Heads</div>
             </div>
         </div>
     </div>
@@ -129,17 +229,17 @@
         const coinFront = document.querySelector('.coin-front');
         const coinBack = document.querySelector('.coin-back');
         let canFlip = true;
-    
+
         function getRandomOutcome() {
             return Math.random() < 0.5;
         }
-    
+
         coin.addEventListener('click', function () {
             if (!canFlip) return;
-    
+
             canFlip = false;
             coin.classList.add('flip-animation');
-    
+
             setTimeout(() => {
                 const isHeads = getRandomOutcome();
 
@@ -152,16 +252,17 @@
                     coinBack.textContent = 'Tails';
                     coin.classList.remove('flipped');
                 }
-    
+
                 coin.classList.remove('flip-animation');
-    
+
                 setTimeout(() => {
                     canFlip = true;
                 }, 600);
             }, 800);
         });
     </script>
-    
-    
+
+
 </body>
+
 </html>
