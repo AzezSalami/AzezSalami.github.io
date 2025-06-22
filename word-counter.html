@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Count Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 16px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c7be5;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1a68d1;
+        }
+
+        .secondary-btn {
+            background-color: #6c757d;
+        }
+
+        .secondary-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+    <button id="toggle-btn">☰</button>
+
+    <div id="drawer">
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+        <div id="drawer-content">
+            <a href="index.html" class="nav-link">Snake Game</a>
+            <a href="dice.html" class="nav-link">Dice</a>
+            <a href="coin.html" class="nav-link">Coin</a>
+            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+            <a href="compare.html" class="nav-link">Text Compare</a>
+            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+            <a href="case-converter.html" class="nav-link">String Case Converter</a>
+            <a href="word-counter.html" class="nav-link">Word Counter</a>
+            <a href="days_calculator.html" class="nav-link">Days Calculator</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+    <div id="main-content">
+        <h1>Word Count Calculator</h1>
+        <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+
+        <div class="button-group">
+            <button onclick="countWords()">Calculate</button>
+            <button class="secondary-btn" onclick="removeLineBreaks()">Remove Line Breaks</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="wordCount">0</div>
+                <div class="stat-label">Words</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="charCount">0</div>
+                <div class="stat-label">Characters</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="charNoSpaces">0</div>
+                <div class="stat-label">Characters (no spaces)</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to count words and characters
+        function countWords() {
+            const text = document.getElementById("textInput").value;
+
+            // Count words
+            const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+
+            // Count characters
+            const chars = text.length;
+
+            // Count characters without spaces
+            const charsNoSpaces = text.replace(/\s+/g, "").length;
+
+            // Update the display
+            document.getElementById("wordCount").textContent = words;
+            document.getElementById("charCount").textContent = chars;
+            document.getElementById("charNoSpaces").textContent = charsNoSpaces;
+        }
+
+        // Function to remove all line breaks
+        function removeLineBreaks() {
+            const textArea = document.getElementById("textInput");
+            const text = textArea.value;
+
+            // Replace all newline characters with a space
+            const processedText = text.replace(/\n/g, " ");
+
+            // Update text area with the processed text
+            textArea.value = processedText;
+
+            // Update counts
+            countWords();
+        }
+
+        // Add event listener for real-time counting
+        document.getElementById("textInput").addEventListener("input", countWords);
+
+        // Initialize counts
+        countWords();
+    </script>
+</body>
+
+</html>

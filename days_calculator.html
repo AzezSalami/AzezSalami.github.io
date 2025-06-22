@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days Between Dates Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+        }
+
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .date-input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="date"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            margin-top: 20px;
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
+        }
+
+        .time-breakdown {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .time-unit {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .time-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .time-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-details {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+
+        .swap-btn {
+            background: none;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: block;
+            margin: 15px auto;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .swap-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.7rem;
+            }
+
+            .result-number {
+                font-size: 1.8rem;
+            }
+
+            .time-breakdown {
+                gap: 5px;
+            }
+
+            .time-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="css/styles.css" />
+
+</head>
+
+<body>
+    <button id="toggle-btn">☰</button>
+
+    <div id="drawer">
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+        <div id="drawer-content">
+            <a href="index.html" class="nav-link">Snake Game</a>
+            <a href="dice.html" class="nav-link">Dice</a>
+            <a href="coin.html" class="nav-link">Coin</a>
+            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+            <a href="compare.html" class="nav-link">Text Compare</a>
+            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+            <a href="case-converter.html" class="nav-link">String Case Converter</a>
+            <a href="word-counter.html" class="nav-link">Word Counter</a>
+            <a href="days_calculator.html" class="nav-link">Days Calculator</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+    <div id="main-content">
+        <h1>Days Between Dates</h1>
+
+        <div class="date-input-group">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate">
+        </div>
+
+        <button class="swap-btn" id="swapBtn" title="Swap dates">⇅</button>
+
+        <div class="date-input-group">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate">
+        </div>
+
+        <button class="calculate-btn" id="calculateBtn">Calculate Days</button>
+
+        <div class="result" id="result">
+            <div class="time-breakdown">
+                <div class="time-unit">
+                    <span class="time-value" id="years">0</span>
+                    <div class="time-label">Years</div>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="months">0</span>
+                    <div class="time-label">Months</div>
+                </div>
+                <div class="time-unit">
+                    <span class="time-value" id="days">0</span>
+                    <div class="time-label">Days</div>
+                </div>
+            </div>
+            <div class="result-number" id="totalDays">0 Total Days</div>
+            <div class="result-details" id="resultDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const swapBtn = document.getElementById('swapBtn');
+        const resultDiv = document.getElementById('result');
+        const yearsSpan = document.getElementById('years');
+        const monthsSpan = document.getElementById('months');
+        const daysSpan = document.getElementById('days');
+        const totalDaysSpan = document.getElementById('totalDays');
+        const resultDetailsDiv = document.getElementById('resultDetails');
+
+        // Set default dates (today and tomorrow)
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        startDateInput.value = formatDateForInput(today);
+        endDateInput.value = formatDateForInput(tomorrow);
+
+        function formatDateForInput(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatDateForDisplay(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function calculateDateDifference(date1, date2) {
+            // Ensure date1 is the earlier date
+            const startDate = new Date(date1);
+            const endDate = new Date(date2);
+
+            let years = endDate.getFullYear() - startDate.getFullYear();
+            let months = endDate.getMonth() - startDate.getMonth();
+            let days = endDate.getDate() - startDate.getDate();
+
+            // Adjust for negative days
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            // Adjust for negative months
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            return { years, months, days };
+        }
+
+        function calculateDaysDifference() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            if (!startDateInput.value || !endDateInput.value) {
+                alert('Please select both dates');
+                return;
+            }
+
+            // Calculate the difference in milliseconds
+            const timeDifference = endDate.getTime() - startDate.getTime();
+
+            // Convert milliseconds to days
+            const totalDaysDifference = Math.ceil(Math.abs(timeDifference) / (1000 * 3600 * 24));
+
+            // Calculate years, months, and days
+            let dateBreakdown;
+            let isNegative = timeDifference < 0;
+
+            if (isNegative) {
+                dateBreakdown = calculateDateDifference(endDateInput.value, startDateInput.value);
+            } else {
+                dateBreakdown = calculateDateDifference(startDateInput.value, endDateInput.value);
+            }
+
+            // Update the result display
+            yearsSpan.textContent = dateBreakdown.years;
+            monthsSpan.textContent = dateBreakdown.months;
+            daysSpan.textContent = dateBreakdown.days;
+            totalDaysSpan.textContent = `${totalDaysDifference} Total Days`;
+
+            // Create detailed result text
+            let resultText = '';
+            if (timeDifference > 0) {
+                resultText = `From ${formatDateForDisplay(startDateInput.value)} to ${formatDateForDisplay(endDateInput.value)}`;
+            } else if (timeDifference < 0) {
+                resultText = `From ${formatDateForDisplay(endDateInput.value)} to ${formatDateForDisplay(startDateInput.value)} (dates swapped)`;
+            } else {
+                resultText = 'Both dates are the same';
+                yearsSpan.textContent = '0';
+                monthsSpan.textContent = '0';
+                daysSpan.textContent = '0';
+                totalDaysSpan.textContent = '0 Total Days';
+            }
+
+            resultDetailsDiv.textContent = resultText;
+
+            // Show result with animation
+            resultDiv.classList.add('show');
+        }
+
+        function swapDates() {
+            const tempDate = startDateInput.value;
+            startDateInput.value = endDateInput.value;
+            endDateInput.value = tempDate;
+
+            // Recalculate if both dates are filled
+            if (startDateInput.value && endDateInput.value) {
+                calculateDaysDifference();
+            }
+        }
+
+        // Event listeners
+        calculateBtn.addEventListener('click', calculateDaysDifference);
+        swapBtn.addEventListener('click', swapDates);
+
+        // Auto-calculate when dates change
+        startDateInput.addEventListener('change', () => {
+            if (startDateInput.value && endDateInput.value) {
+                calculateDaysDifference();
+            }
+        });
+
+        endDateInput.addEventListener('change', () => {
+            if (startDateInput.value && endDateInput.value) {
+                calculateDaysDifference();
+            }
+        });
+
+        // Calculate initial result
+        calculateDaysDifference();
+    </script>
+</body>
+
+</html>
