@@ -4,53 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Coin Flip Simulator</title>
-    <!-- Add viewport for mobile responsiveness -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             display: flex;
-            flex-direction: column;
-            /* Stack vertically on mobile */
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            /* Use min-height for better scaling */
+            height: 150vh;
             margin: 0;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            padding: 16px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            /* Push content to the bottom */
-            min-height: 80vh;
-            /* Ensure enough height for spacing */
-        }
-
         .coin-container {
             perspective: 1000px;
-            width: 100%;
-            max-width: 200px;
-            height: auto;
-            margin: 0 auto;
+            width: 200px;
+            height: 200px;
         }
 
         .coin {
-            width: 100%;
-            max-width: 150px;
+            width: 150px;
             height: 150px;
             border-radius: 50%;
             position: relative;
             transform-style: preserve-3d;
             cursor: pointer;
             transition: transform 0.6s;
-            margin: 0 auto;
         }
 
         .coin-front,
@@ -209,45 +187,6 @@
             font-size: 1.5rem;
             text-align: center;
         }
-
-        /* Responsive font and coin size */
-        @media (max-width: 600px) {
-            .coin {
-                max-width: 100px;
-                height: 100px;
-            }
-
-            .coin-front,
-            .coin-back {
-                font-size: 1.2rem;
-            }
-
-            .container {
-                padding: 8px;
-                min-height: 70vh;
-                /* Lower the coin further on small screens */
-                justify-content: flex-end;
-            }
-        }
-
-        /* Make navigation drawer more touch-friendly */
-        #drawer {
-            width: 100vw;
-            max-width: 300px;
-            background: #fff;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: -100vw;
-            height: 100vh;
-            overflow-y: auto;
-            transition: left 0.3s;
-            z-index: 1000;
-        }
-
-        #drawer.open {
-            left: 0;
-        }
     </style>
     <link rel="stylesheet" href="css/styles.css" />
 
@@ -272,6 +211,8 @@
             <a href="word-counter.html" class="nav-link">Word Counter</a>
             <a href="days_calculator.html" class="nav-link">Days Calculator</a>
             <a href="character_counter.html" class="nav-link">Character Counter</a>
+            <a href="random-generator.html" class="nav-link">Random Generator</a>
+            <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
             <a href="about.html" class="nav-link">About</a>
         </div>
     </div>
@@ -285,19 +226,6 @@
     </div>
 
     <script>
-        // Drawer toggle for mobile
-        const toggleBtn = document.getElementById('toggle-btn');
-        const drawer = document.getElementById('drawer');
-        toggleBtn.addEventListener('click', () => {
-            drawer.classList.toggle('open');
-        });
-        // Close drawer when a link is clicked (mobile UX)
-        document.querySelectorAll('#drawer-content .nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                drawer.classList.remove('open');
-            });
-        });
-
         const coin = document.getElementById('coinElement');
         const coinFront = document.querySelector('.coin-front');
         const coinBack = document.querySelector('.coin-back');

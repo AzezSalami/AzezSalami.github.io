@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.6s ease-out;
+            margin: 40px auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            word-break: break-all;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #495057;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .result.has-content {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-color: #667eea;
+            color: #333;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+
+        .result:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        .range-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .range-inputs .input-group {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+    </style>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <button id="toggle-btn">☰</button>
+  <div id="drawer">
+    <div id="drawer-header">
+      <h2>Navigation</h2>
+    </div>
+    <div id="drawer-content">
+      <a href="index.html" class="nav-link">Snake Game</a>
+      <a href="dice.html" class="nav-link">Dice</a>
+      <a href="coin.html" class="nav-link">Coin</a>
+      <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+      <a href="compare.html" class="nav-link">Text Compare</a>
+      <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+      <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+      <a href="case-converter.html" class="nav-link">String Case Converter</a>
+      <a href="word-counter.html" class="nav-link">Word Counter</a>
+      <a href="days_calculator.html" class="nav-link">Days Calculator</a>
+      <a href="character_counter.html" class="nav-link">Character Counter</a>
+      <a href="random-generator.html" class="nav-link">Random Generator</a>
+      <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+  </div>
+  <div id="main-content">
+    <div class="container">
+        <h1>🎲 Random Generator</h1>
+        
+        <div class="tab-container">
+            <button class="tab active" onclick="switchTab('string')">Random String</button>
+            <button class="tab" onclick="switchTab('integer')">Random Integer</button>
+        </div>
+
+        <div id="string-content" class="content active">
+            <div class="input-group">
+                <label for="string-length">String Length:</label>
+                <input type="number" id="string-length" min="1" max="1000" value="8">
+            </div>
+            
+            <div class="input-group">
+                <label>Character Types:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="uppercase">
+                        <label for="uppercase">Uppercase (A-Z)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lowercase" checked>
+                        <label for="lowercase">Lowercase (a-z)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="numbers" checked>
+                        <label for="numbers">Numbers (0-9)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="symbols">
+                        <label for="symbols">Symbols (!@#$%^&*)</label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="generate-btn" onclick="generateString()">Generate Random String</button>
+            <div id="string-result" class="result">Click generate to create a random string</div>
+        </div>
+
+        <div id="integer-content" class="content">
+            <div class="input-group">
+                <label for="int-type">Integer Type:</label>
+                <select id="int-type" onchange="toggleIntegerOptions()">
+                    <option value="single">Single Random Number</option>
+                    <option value="range">Number in Range</option>
+                    <option value="multiple">Multiple Numbers</option>
+                </select>
+            </div>
+
+            <div id="single-options">
+                <div class="input-group">
+                    <label for="int-digits">Number of Digits:</label>
+                    <input type="number" id="int-digits" min="1" max="15" value="5">
+                </div>
+            </div>
+
+            <div id="range-options" style="display: none;">
+                <div class="range-inputs">
+                    <div class="input-group">
+                        <label for="min-value">Minimum:</label>
+                        <input type="number" id="min-value" value="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="max-value">Maximum:</label>
+                        <input type="number" id="max-value" value="100">
+                    </div>
+                </div>
+            </div>
+
+            <div id="multiple-options" style="display: none;">
+                <div class="range-inputs">
+                    <div class="input-group">
+                        <label for="count">Count:</label>
+                        <input type="number" id="count" min="1" max="100" value="5">
+                    </div>
+                    <div class="input-group">
+                        <label for="mult-digits">Digits Each:</label>
+                        <input type="number" id="mult-digits" min="1" max="10" value="3">
+                    </div>
+                </div>
+            </div>
+
+            <button class="generate-btn" onclick="generateInteger()">Generate Random Integer(s)</button>
+            <div id="integer-result" class="result">Click generate to create random integer(s)</div>
+        </div>
+    </div>
+</div>
+<script src="js/main.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tab + '-content').classList.add('active');
+        }
+
+        function toggleIntegerOptions() {
+            const type = document.getElementById('int-type').value;
+            
+            document.getElementById('single-options').style.display = type === 'single' ? 'block' : 'none';
+            document.getElementById('range-options').style.display = type === 'range' ? 'block' : 'none';
+            document.getElementById('multiple-options').style.display = type === 'multiple' ? 'block' : 'none';
+        }
+
+        function generateString() {
+            const length = parseInt(document.getElementById('string-length').value);
+            const includeUppercase = document.getElementById('uppercase').checked;
+            const includeLowercase = document.getElementById('lowercase').checked;
+            const includeNumbers = document.getElementById('numbers').checked;
+            const includeSymbols = document.getElementById('symbols').checked;
+
+            if (length < 1 || length > 1000) {
+                alert('Please enter a length between 1 and 1000');
+                return;
+            }
+
+            let charset = '';
+            if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (includeNumbers) charset += '0123456789';
+            if (includeSymbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            if (charset === '') {
+                alert('Please select at least one character type');
+                return;
+            }
+
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+
+            displayResult('string-result', result);
+        }
+
+        function generateInteger() {
+            const type = document.getElementById('int-type').value;
+            let result = '';
+
+            switch (type) {
+                case 'single':
+                    const digits = parseInt(document.getElementById('int-digits').value);
+                    if (digits < 1 || digits > 15) {
+                        alert('Please enter digits between 1 and 15');
+                        return;
+                    }
+                    
+                    const min = Math.pow(10, digits - 1);
+                    const max = Math.pow(10, digits) - 1;
+                    result = Math.floor(Math.random() * (max - min + 1)) + min;
+                    break;
+
+                case 'range':
+                    const minVal = parseInt(document.getElementById('min-value').value);
+                    const maxVal = parseInt(document.getElementById('max-value').value);
+                    
+                    if (minVal >= maxVal) {
+                        alert('Maximum value must be greater than minimum value');
+                        return;
+                    }
+                    
+                    result = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+                    break;
+
+                case 'multiple':
+                    const count = parseInt(document.getElementById('count').value);
+                    const multDigits = parseInt(document.getElementById('mult-digits').value);
+                    
+                    if (count < 1 || count > 100) {
+                        alert('Please enter count between 1 and 100');
+                        return;
+                    }
+                    
+                    const multMin = Math.pow(10, multDigits - 1);
+                    const multMax = Math.pow(10, multDigits) - 1;
+                    
+                    const numbers = [];
+                    for (let i = 0; i < count; i++) {
+                        numbers.push(Math.floor(Math.random() * (multMax - multMin + 1)) + multMin);
+                    }
+                    result = numbers.join(', ');
+                    break;
+            }
+
+            displayResult('integer-result', result);
+        }
+
+        function displayResult(elementId, result) {
+            const resultElement = document.getElementById(elementId);
+            resultElement.textContent = result;
+            resultElement.classList.add('has-content');
+            
+            // Add copy button if it doesn't exist
+            if (!resultElement.querySelector('.copy-btn')) {
+                const copyBtn = document.createElement('button');
+                copyBtn.textContent = 'Copy';
+                copyBtn.className = 'copy-btn';
+                copyBtn.onclick = (event) => copyToClipboard(result, event);
+                resultElement.appendChild(copyBtn);
+            }
+        }
+
+        function copyToClipboard(text, event) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback
+                const copyBtn = event.target;
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                copyBtn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = '#667eea';
+                }, 1000);
+            }).catch(() => {
+                alert('Failed to copy to clipboard');
+            });
+        }
+
+        // Initialize with some sample generations
+        window.onload = function() {
+            generateString();
+        };
+    </script>
+</body>
+</html> 
