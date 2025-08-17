@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF Converter</title>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            transition: border-color 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+        .preview {
+            max-width: 100%;
+            max-height: 400px;
+            margin: 1rem auto;
+            display: block;
+            object-fit: contain;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #file-input {
+            display: none;
+        }
+        .output-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .output-section a {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .output-section a:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: red;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <button id="toggle-btn">☰</button>
+
+    <div id="drawer">
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+    <div id="drawer-content">
+      <a href="index.html" class="nav-link">Snake Game</a>
+      <a href="dice.html" class="nav-link">Dice</a>
+      <a href="coin.html" class="nav-link">Coin</a>
+      <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+      <a href="compare.html" class="nav-link">Text Compare</a>
+      <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+      <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+      <a href="case-converter.html" class="nav-link">String Case Converter</a>
+      <a href="word-counter.html" class="nav-link">Word Counter</a>
+      <a href="days_calculator.html" class="nav-link">Days Calculator</a>
+      <a href="character_counter.html" class="nav-link">Character Counter</a>
+      <a href="random-generator.html" class="nav-link">Random Generator</a>
+      <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
+      <a href="image-to-pdf.html" class="nav-link">Image to PDF</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+    </div>
+    <div id="main-content">
+        <h1>Image to PDF Converter</h1>
+
+        <div class="drop-zone" id="dropZone">
+            <p>Drag and drop images here or click to select</p>
+            <input type="file" accept="image/*" id="file-input" multiple>
+        </div>
+
+        <div id="image-previews" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 1rem;"></div>
+
+        <button id="convert-btn" style="display: none;">Convert to PDF</button>
+
+        <div class="output-section" id="output-section" style="display: none;">
+            <p>Your PDF is ready:</p>
+            <a id="download-link" href="#" download="converted-image.pdf">Download PDF</a>
+        </div>
+
+        <p id="error-message" class="error-message" style="display: none;"></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('dropZone');
+        const imagePreviewsContainer = document.getElementById('image-previews');
+        const convertBtn = document.getElementById('convert-btn');
+        const outputSection = document.getElementById('output-section');
+        const downloadLink = document.getElementById('download-link');
+        const errorMessage = document.getElementById('error-message');
+
+        let selectedFiles = [];
+
+        // Handle drag and drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        dropZone.addEventListener('click', () => fileInput.click(), false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+
+            selectedFiles = [];
+            imagePreviewsContainer.innerHTML = ''; // Clear previous previews
+            errorMessage.style.display = 'none';
+            outputSection.style.display = 'none';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (!file.type.startsWith('image/')) {
+                    showError('Please select only image files (e.g., JPG, PNG, GIF).');
+                    selectedFiles = [];
+                    imagePreviewsContainer.innerHTML = '';
+                    return;
+                }
+                selectedFiles.push(file);
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('preview');
+                    img.style.display = 'block';
+                    imagePreviewsContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            if (selectedFiles.length > 0) {
+                convertBtn.style.display = 'block';
+            } else {
+                convertBtn.style.display = 'none';
+            }
+        }
+
+        convertBtn.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) {
+                showError('Please select at least one image first.');
+                return;
+            }
+
+            try {
+                const { PDFDocument } = PDFLib;
+                const pdfDoc = await PDFDocument.create();
+
+                for (const file of selectedFiles) {
+                    const imageBytes = await file.arrayBuffer();
+                    let image;
+
+                    if (file.type === 'image/jpeg') {
+                        image = await pdfDoc.embedJpg(imageBytes);
+                    } else if (file.type === 'image/png') {
+                        image = await pdfDoc.embedPng(imageBytes);
+                    } else {
+                        showError('Unsupported image format. Please use JPG or PNG.');
+                        return;
+                    }
+
+                    const imageDim = image.scale(1);
+                    const page = pdfDoc.addPage();
+
+                    // Calculate dimensions to fit the image on the page while maintaining aspect ratio
+                    const pageWidth = page.getWidth();
+                    const pageHeight = page.getHeight();
+
+                    const aspectRatio = imageDim.width / imageDim.height;
+
+                    let imgWidth = pageWidth;
+                    let imgHeight = pageWidth / aspectRatio;
+
+                    if (imgHeight > pageHeight) {
+                        imgHeight = pageHeight;
+                        imgWidth = pageHeight * aspectRatio;
+                    }
+
+                    const x = (pageWidth - imgWidth) / 2;
+                    const y = (pageHeight - imgHeight) / 2;
+
+                    page.drawImage(image, {
+                        x,
+                        y,
+                        width: imgWidth,
+                        height: imgHeight,
+                    });
+                }
+
+                const pdfBytes = await pdfDoc.save();
+                const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+
+                downloadLink.href = pdfUrl;
+                downloadLink.download = 'converted-images.pdf'; // Generic name for multiple files
+                outputSection.style.display = 'block';
+                convertBtn.style.display = 'none'; // Hide convert button after successful conversion
+            }
+            catch (error) {
+                console.error('Error converting image to PDF:', error);
+                showError('Failed to convert image to PDF. Please try again.');
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            outputSection.style.display = 'none';
+            convertBtn.style.display = 'none';
+            imagePreviewsContainer.innerHTML = ''; // Clear previews on error
+        }
+    </script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,8 +82,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .form-group {
@@ -99,7 +107,9 @@
             letter-spacing: 0.5px;
         }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e1e5e9;
@@ -109,7 +119,9 @@
             background: #f8f9fa;
         }
 
-        input:focus, textarea:focus, select:focus {
+        input:focus,
+        textarea:focus,
+        select:focus {
             outline: none;
             border-color: #667eea;
             background: white;
@@ -181,9 +193,20 @@
             line-height: 1.5;
         }
 
-        .header { background: #ffebee; border-left: 4px solid #f44336; }
-        .payload { background: #f3e5f5; border-left: 4px solid #9c27b0; }
-        .signature { background: #e8f5e8; border-left: 4px solid #4caf50; }
+        .header {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+
+        .payload {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+        }
+
+        .signature {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
 
         .jwt-part h4 {
             margin-bottom: 10px;
@@ -221,11 +244,11 @@
             .grid {
                 grid-template-columns: 1fr;
             }
-            
+
             h1 {
                 font-size: 2rem;
             }
-            
+
             .container {
                 padding: 20px;
                 margin: 10px;
@@ -244,35 +267,37 @@
             background: #218838;
         }
     </style>
-        <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 
 </head>
+
 <body>
     <button id="toggle-btn">☰</button>
-  <div id="drawer">
-    <div id="drawer-header">
-      <h2>Navigation</h2>
+    <div id="drawer">
+        <div id="drawer-header">
+            <h2>Navigation</h2>
+        </div>
+        <div id="drawer-content">
+            <a href="index.html" class="nav-link">Snake Game</a>
+            <a href="dice.html" class="nav-link">Dice</a>
+            <a href="coin.html" class="nav-link">Coin</a>
+            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
+            <a href="compare.html" class="nav-link">Text Compare</a>
+            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
+            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
+            <a href="case-converter.html" class="nav-link">String Case Converter</a>
+            <a href="word-counter.html" class="nav-link">Word Counter</a>
+            <a href="days_calculator.html" class="nav-link">Days Calculator</a>
+            <a href="character_counter.html" class="nav-link">Character Counter</a>
+            <a href="random-generator.html" class="nav-link">Random Generator</a>
+            <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
+            <a href="image-to-pdf.html" class="nav-link">Image to PDF</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
     </div>
-    <div id="drawer-content">
-      <a href="index.html" class="nav-link">Snake Game</a>
-      <a href="dice.html" class="nav-link">Dice</a>
-      <a href="coin.html" class="nav-link">Coin</a>
-      <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-      <a href="compare.html" class="nav-link">Text Compare</a>
-      <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-      <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-      <a href="case-converter.html" class="nav-link">String Case Converter</a>
-      <a href="word-counter.html" class="nav-link">Word Counter</a>
-      <a href="days_calculator.html" class="nav-link">Days Calculator</a>
-      <a href="character_counter.html" class="nav-link">Character Counter</a>
-      <a href="random-generator.html" class="nav-link">Random Generator</a>
-      <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
-      <a href="about.html" class="nav-link">About</a>
-    </div>
-  </div>
     <div class="container">
         <h1>🔐 JWT Encoder & Decoder</h1>
-        
+
         <div class="tabs">
             <button class="tab active" onclick="showTab('encoder')">Encode JWT</button>
             <button class="tab" onclick="showTab('decoder')">Decode JWT</button>
@@ -298,7 +323,8 @@
 
                     <div class="form-group">
                         <label for="payload">Payload (JSON)</label>
-                        <textarea id="payload" placeholder='{"sub": "1234567890", "name": "John Doe", "iat": 1516239022}'></textarea>
+                        <textarea id="payload"
+                            placeholder='{"sub": "1234567890", "name": "John Doe", "iat": 1516239022}'></textarea>
                     </div>
 
                     <div class="form-group">
@@ -346,7 +372,7 @@
             const encoder = new TextEncoder();
             const keyData = encoder.encode(key);
             const messageData = encoder.encode(message);
-            
+
             const cryptoKey = await crypto.subtle.importKey(
                 'raw',
                 keyData,
@@ -354,7 +380,7 @@
                 false,
                 ['sign']
             );
-            
+
             const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
             return new Uint8Array(signature);
         }
@@ -372,25 +398,25 @@
         function showTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
-            
+
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
         }
 
         // Initialize default values
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('header').value = JSON.stringify({
                 "typ": "JWT",
                 "alg": "HS256"
             }, null, 2);
-            
+
             document.getElementById('payload').value = JSON.stringify({
                 "sub": "1234567890",
                 "name": "John Doe",
                 "iat": Math.floor(Date.now() / 1000),
                 "exp": Math.floor(Date.now() / 1000) + 3600
             }, null, 2);
-            
+
             document.getElementById('secret').value = "your-256-bit-secret";
         });
 
@@ -456,14 +482,14 @@
         function decodeJWT() {
             try {
                 const jwt = document.getElementById('jwtInput').value.trim();
-                
+
                 if (!jwt) {
                     throw new Error('Please enter a JWT token');
                 }
 
                 // Split JWT into parts
                 const parts = jwt.split('.');
-                
+
                 if (parts.length !== 3) {
                     throw new Error('Invalid JWT format. JWT should have 3 parts separated by dots.');
                 }
@@ -524,7 +550,7 @@
 
         // Copy to clipboard function
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
+            navigator.clipboard.writeText(text).then(function () {
                 // Visual feedback
                 event.target.textContent = 'Copied!';
                 setTimeout(() => {
@@ -534,4 +560,5 @@
         }
     </script>
 </body>
-</html> 
+
+</html>
