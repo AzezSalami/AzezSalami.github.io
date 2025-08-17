@@ -36,6 +36,8 @@ body {
 
 #drawer-content {
   padding: 20px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 
 .nav-link {
@@ -137,6 +139,7 @@ body {
   padding: 20px;
   line-height: 1.6;
 }
+
 .card {
   background: white;
   padding: 20px;
@@ -144,6 +147,7 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
+
 @media (max-width: 768px) {
   #drawer {
     transform: translateX(-250px);
