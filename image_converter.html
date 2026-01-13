@@ -289,70 +289,185 @@
 
         convertBtn.addEventListener('click', convertImage);
 
+        function isSVGFile(file) {
+            return file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
+        }
+
+        // Read SVG text and ensure it has explicit width/height when viewBox is present
+        function prepareSVGText(svgText, targetWidth, targetHeight) {
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svg = doc.querySelector('svg');
+                if (!svg) return svgText;
+
+                // If viewBox exists but width/height missing, set width/height attributes
+                const vb = svg.getAttribute('viewBox');
+                const hasWidth = svg.hasAttribute('width');
+                const hasHeight = svg.hasAttribute('height');
+
+                if (vb && (!hasWidth || !hasHeight)) {
+                    // Use target dimensions to rasterize at desired size
+                    svg.setAttribute('width', targetWidth);
+                    svg.setAttribute('height', targetHeight);
+                }
+
+                // Inline CSS <style> blocks are preserved by serializing the doc
+                const serializer = new XMLSerializer();
+                return serializer.serializeToString(doc);
+            } catch (err) {
+                return svgText;
+            }
+        }
+
         function convertImage() {
             if (!selectedFile) return;
 
+            const targetWidth = parseInt(widthInput.value);
+            const targetHeight = parseInt(heightInput.value);
+            const mode = resizeMode.value;
+            const dpr = window.devicePixelRatio || 1;
+
+            if (isSVGFile(selectedFile)) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    let svgText = e.target.result;
+                    // If Data URL, extract the SVG text part
+                    if (typeof svgText === 'string' && svgText.indexOf('data:') === 0) {
+                        const comma = svgText.indexOf(',');
+                        svgText = decodeURIComponent(svgText.slice(comma + 1));
+                    }
+
+                    svgText = prepareSVGText(svgText, targetWidth * dpr, targetHeight * dpr);
+
+                    const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const img = new Image();
+
+                    img.onload = () => {
+                        // Create high-DPI canvas
+                        const canvas = document.createElement('canvas');
+                        canvas.width = targetWidth * dpr;
+                        canvas.height = targetHeight * dpr;
+                        canvas.style.width = targetWidth + 'px';
+                        canvas.style.height = targetHeight + 'px';
+                        const ctx = canvas.getContext('2d');
+
+                        // For contain/cover modes we still compute drawing rectangle using source image size
+                        let sx = 0, sy = 0, sw = img.width, sh = img.height;
+                        let dx = 0, dy = 0, dw = canvas.width, dh = canvas.height;
+
+                        if (mode === 'contain') {
+                            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                            dw = img.width * scale;
+                            dh = img.height * scale;
+                            dx = (canvas.width - dw) / 2;
+                            dy = (canvas.height - dh) / 2;
+                        } else if (mode === 'cover') {
+                            const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                            const scaledWidth = img.width * scale;
+                            const scaledHeight = img.height * scale;
+                            if (scaledWidth > canvas.width) {
+                                sw = img.width * (canvas.width / scaledWidth);
+                                sx = (img.width - sw) / 2;
+                            }
+                            if (scaledHeight > canvas.height) {
+                                sh = img.height * (canvas.height / scaledHeight);
+                                sy = (img.height - sh) / 2;
+                            }
+                        } else {
+                            // stretch: dw/dh remain canvas dimensions
+                        }
+
+                        ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+
+                        canvas.toBlob((outBlob) => {
+                            const outUrl = URL.createObjectURL(outBlob);
+                            previewImg.src = outUrl;
+                            preview.style.display = 'block';
+
+                            const sizeKB = (outBlob.size / 1024).toFixed(2);
+                            const modeText = mode.charAt(0).toUpperCase() + mode.slice(1);
+                            info.textContent = `Size: ${sizeKB} KB | Dimensions: ${targetWidth}x${targetHeight}px | Format: PNG | Mode: ${modeText}`;
+
+                            const link = document.createElement('a');
+                            link.href = outUrl;
+                            link.download = `converted_${targetWidth}x${targetHeight}.png`;
+                            link.textContent = '⬇️ Download PNG';
+                            link.style.display = 'inline-block';
+                            link.style.marginTop = '15px';
+                            link.style.padding = '10px 20px';
+                            link.style.background = '#667eea';
+                            link.style.color = 'white';
+                            link.style.textDecoration = 'none';
+                            link.style.borderRadius = '5px';
+                            link.style.fontWeight = '600';
+
+                            const oldLink = info.parentElement.querySelector('a');
+                            if (oldLink) oldLink.remove();
+                            info.parentElement.appendChild(link);
+                            URL.revokeObjectURL(url);
+                        }, 'image/png');
+                    };
+                    // Important: set crossOrigin to anonymous to avoid tainting (if possible)
+                    img.crossOrigin = 'anonymous';
+                    img.src = url;
+                };
+                reader.readAsText(selectedFile);
+                return;
+            }
+
+            // Raster images (PNG/JPEG/etc.) - read as Data URL and draw with DPR scaling
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
-                    const targetWidth = parseInt(widthInput.value);
-                    const targetHeight = parseInt(heightInput.value);
-                    const mode = resizeMode.value;
-
-                    // Create canvas
                     const canvas = document.createElement('canvas');
-                    canvas.width = targetWidth;
-                    canvas.height = targetHeight;
+                    const cssWidth = targetWidth;
+                    const cssHeight = targetHeight;
+                    canvas.width = cssWidth * dpr;
+                    canvas.height = cssHeight * dpr;
+                    canvas.style.width = cssWidth + 'px';
+                    canvas.style.height = cssHeight + 'px';
                     const ctx = canvas.getContext('2d');
 
-                    // Canvas is transparent by default, no fill needed
-
                     let sx = 0, sy = 0, sw = img.width, sh = img.height;
-                    let dx = 0, dy = 0, dw = targetWidth, dh = targetHeight;
+                    let dx = 0, dy = 0, dw = canvas.width, dh = canvas.height;
 
                     if (mode === 'contain') {
-                        // Fit inside, keep aspect ratio
-                        const scale = Math.min(targetWidth / img.width, targetHeight / img.height);
+                        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
                         dw = img.width * scale;
                         dh = img.height * scale;
-                        dx = (targetWidth - dw) / 2;
-                        dy = (targetHeight - dh) / 2;
+                        dx = (canvas.width - dw) / 2;
+                        dy = (canvas.height - dh) / 2;
                     } else if (mode === 'cover') {
-                        // Fill area, keep aspect ratio, crop if needed
-                        const scale = Math.max(targetWidth / img.width, targetHeight / img.height);
+                        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
                         const scaledWidth = img.width * scale;
                         const scaledHeight = img.height * scale;
-                        
-                        if (scaledWidth > targetWidth) {
-                            sw = img.width * (targetWidth / scaledWidth);
+                        if (scaledWidth > canvas.width) {
+                            sw = img.width * (canvas.width / scaledWidth);
                             sx = (img.width - sw) / 2;
                         }
-                        if (scaledHeight > targetHeight) {
-                            sh = img.height * (targetHeight / scaledHeight);
+                        if (scaledHeight > canvas.height) {
+                            sh = img.height * (canvas.height / scaledHeight);
                             sy = (img.height - sh) / 2;
                         }
                     }
-                    // else 'stretch' mode uses default values
 
-                    // Draw image on canvas
                     ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
 
-                    // Convert to PNG
                     canvas.toBlob((blob) => {
                         const url = URL.createObjectURL(blob);
                         previewImg.src = url;
                         preview.style.display = 'block';
 
-                        // Show info
                         const sizeKB = (blob.size / 1024).toFixed(2);
                         const modeText = mode.charAt(0).toUpperCase() + mode.slice(1);
-                        info.textContent = `Size: ${sizeKB} KB | Dimensions: ${targetWidth}x${targetHeight}px | Format: PNG | Mode: ${modeText}`;
+                        info.textContent = `Size: ${sizeKB} KB | Dimensions: ${cssWidth}x${cssHeight}px | Format: PNG | Mode: ${modeText}`;
 
-                        // Create download link
                         const link = document.createElement('a');
                         link.href = url;
-                        link.download = `converted_${targetWidth}x${targetHeight}.png`;
+                        link.download = `converted_${cssWidth}x${cssHeight}.png`;
                         link.textContent = '⬇️ Download PNG';
                         link.style.display = 'inline-block';
                         link.style.marginTop = '15px';
@@ -363,13 +478,12 @@
                         link.style.borderRadius = '5px';
                         link.style.fontWeight = '600';
 
-                        // Remove old download link if exists
                         const oldLink = info.parentElement.querySelector('a');
                         if (oldLink) oldLink.remove();
-                        
                         info.parentElement.appendChild(link);
                     }, 'image/png');
                 };
+                img.crossOrigin = 'anonymous';
                 img.src = e.target.result;
             };
             reader.readAsDataURL(selectedFile);
