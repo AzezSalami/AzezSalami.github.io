@@ -326,7 +326,6 @@
             const targetWidth = parseInt(widthInput.value);
             const targetHeight = parseInt(heightInput.value);
             const mode = resizeMode.value;
-            const dpr = window.devicePixelRatio || 1;
 
             if (isSVGFile(selectedFile)) {
                 const reader = new FileReader();
@@ -338,19 +337,17 @@
                         svgText = decodeURIComponent(svgText.slice(comma + 1));
                     }
 
-                    svgText = prepareSVGText(svgText, targetWidth * dpr, targetHeight * dpr);
+                    svgText = prepareSVGText(svgText, targetWidth, targetHeight);
 
                     const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
                     const url = URL.createObjectURL(blob);
                     const img = new Image();
 
                     img.onload = () => {
-                        // Create high-DPI canvas
+                        // Canvas size must match the requested output dimensions exactly
                         const canvas = document.createElement('canvas');
-                        canvas.width = targetWidth * dpr;
-                        canvas.height = targetHeight * dpr;
-                        canvas.style.width = targetWidth + 'px';
-                        canvas.style.height = targetHeight + 'px';
+                        canvas.width = targetWidth;
+                        canvas.height = targetHeight;
                         const ctx = canvas.getContext('2d');
 
                         // For contain/cover modes we still compute drawing rectangle using source image size
@@ -417,7 +414,7 @@
                 return;
             }
 
-            // Raster images (PNG/JPEG/etc.) - read as Data URL and draw with DPR scaling
+            // Raster images (PNG/JPEG/etc.) - read as Data URL
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
@@ -425,10 +422,8 @@
                     const canvas = document.createElement('canvas');
                     const cssWidth = targetWidth;
                     const cssHeight = targetHeight;
-                    canvas.width = cssWidth * dpr;
-                    canvas.height = cssHeight * dpr;
-                    canvas.style.width = cssWidth + 'px';
-                    canvas.style.height = cssHeight + 'px';
+                    canvas.width = cssWidth;
+                    canvas.height = cssHeight;
                     const ctx = canvas.getContext('2d');
 
                     let sx = 0, sy = 0, sw = img.width, sh = img.height;
