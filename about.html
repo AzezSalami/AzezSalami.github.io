@@ -3,41 +3,22 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Snake Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>About · Tools</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🧰%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/theme.js"></script>
+  <script defer src="js/lib/ui.js"></script>
+  <script defer src="js/app.js"></script>
 </head>
 
 <body>
-  <button id="toggle-btn">☰</button>
+  <main id="main" class="page page--narrow">
+    <header class="page-header">
+      <h1>About</h1>
+    </header>
 
-  <div id="drawer">
-    <div id="drawer-header">
-      <h2>Navigation</h2>
-    </div>
-    <div id="drawer-content">
-      <a href="index.html" class="nav-link">Snake Game</a>
-      <a href="dice.html" class="nav-link">Dice</a>
-      <a href="coin.html" class="nav-link">Coin</a>
-      <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-      <a href="compare.html" class="nav-link">Text Compare</a>
-      <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-      <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-      <a href="image_converter.html" class="nav-link">Image Converter</a>
-      <a href="case-converter.html" class="nav-link">String Case Converter</a>
-      <a href="word-counter.html" class="nav-link">Word Counter</a>
-      <a href="days_calculator.html" class="nav-link">Days Calculator</a>
-      <a href="character_counter.html" class="nav-link">Character Counter</a>
-      <a href="random-generator.html" class="nav-link">Random Generator</a>
-      <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
-      <a href="image-to-pdf.html" class="nav-link">Image to PDF</a>
-      <a href="about.html" class="nav-link">About</a>
-    </div>
-  </div>
-
-  <div id="main-content">
-    <h1>About</h1>
-    <div class="card">
+    <section class="card">
       <h2>Our Story</h2>
       <p>Once upon a time, a brave human had a wild idea — “What if I let AI do almost <em>everything</em>?” And so,
         this website was born. Built with 98% AI magic (and 2% coffee-fueled human supervision), this site came to life
@@ -45,14 +26,13 @@
         the human fixed a typo here and there, but honestly, the bots did most of the heavy lifting. So if you like what
         you see, thank the algorithms. If you don’t… well, blame the 2%.</p>
       <p><em>P.S. This paragraph was also written by AI. The circle is complete.</em></p>
+    </section>
 
-    </div>
-    <div class="card">
+    <section class="card">
       <h2>Our Mission</h2>
       <p>Will be updated soon.</p>
-    </div>
-  </div>
-  <script src="js/main.js"></script>
+    </section>
+  </main>
 </body>
 
 </html>

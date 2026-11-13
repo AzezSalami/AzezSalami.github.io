@@ -2,270 +2,42 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Coin Flip Simulator</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 150vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .coin-container {
-            perspective: 1000px;
-            width: 200px;
-            height: 200px;
-        }
-
-        .coin {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            position: relative;
-            transform-style: preserve-3d;
-            cursor: pointer;
-            transition: transform 0.6s;
-        }
-
-        .coin-front,
-        .coin-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .coin-front {
-            background: url('tails-image.jpg') no-repeat center center;
-            background-size: cover;
-            transform: rotateY(0deg);
-            border: 5px solid #B8860B;
-        }
-
-        .coin-back {
-            background: url('heads-image.jpg') no-repeat center center;
-            background-size: cover;
-
-            transform: rotateY(180deg);
-            border: 5px solid #696969;
-        }
-
-        .coin.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .coin.flip-animation {
-            animation: coinFlip 1s linear;
-        }
-
-        @keyframes coinFlip {
-            0% {
-                transform: translateY(0) rotateX(0deg);
-            }
-
-            5% {
-                transform: translateY(-50px) rotateX(10deg);
-            }
-
-            10% {
-                transform: translateY(-100px) rotateX(200deg);
-            }
-
-            15% {
-                transform: translateY(-150px) rotateX(30deg);
-            }
-
-            20% {
-                transform: translateY(-200px) rotateX(300deg);
-            }
-
-            25% {
-                transform: translateY(-250px) rotateX(50deg);
-            }
-
-            30% {
-                transform: translateY(-300px) rotateX(320deg);
-            }
-
-            35% {
-                transform: translateY(-350px) rotateX(70deg);
-            }
-
-            40% {
-                transform: translateY(-400px) rotateX(220deg);
-            }
-
-            45% {
-                transform: translateY(-450px) rotateX(90deg);
-            }
-
-            50% {
-                transform: translateY(-400px) rotateX(300deg);
-            }
-
-            55% {
-                transform: translateY(-350px) rotateX(110deg);
-            }
-
-            60% {
-                transform: translateY(-300px) rotateX(350deg);
-            }
-
-            65% {
-                transform: translateY(-250px) rotateX(130deg);
-            }
-
-            70% {
-                transform: translateY(-200px) rotateX(240deg);
-            }
-
-            75% {
-                transform: translateY(-150px) rotateX(150deg);
-            }
-
-            80% {
-                transform: translateY(-100px) rotateX(260deg);
-            }
-
-            85% {
-                transform: translateY(-50px) rotateX(170deg);
-            }
-
-            91% {
-                transform: translateY(-25px) rotateX(280deg);
-            }
-
-            92% {
-                transform: translateY(-10px) rotateX(190deg);
-            }
-
-            93% {
-                transform: translateY(-9px) rotateX(100deg);
-            }
-
-            94% {
-                transform: translateY(-8px) rotateX(90deg);
-            }
-
-            95% {
-                transform: translateY(-7px) rotateX(450deg);
-            }
-
-            96% {
-                transform: translateY(-6px) rotateX(30deg);
-            }
-
-            97% {
-                transform: translateY(-5px) rotateX(20deg);
-            }
-
-            98% {
-                transform: translateY(-3px) rotateX(10deg);
-            }
-
-            99% {
-                transform: translateY(-1px) rotateX(5deg);
-            }
-
-            100% {
-                transform: translateY(0) rotateX(0deg);
-            }
-        }
-
-        .result {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-    </style>
-    <link rel="stylesheet" href="css/styles.css" />
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Coin Flip · Tools</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🧰%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/theme.js"></script>
+  <script defer src="js/lib/ui.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/tools/coin.js"></script>
 </head>
 
 <body>
-    <button id="toggle-btn">☰</button>
+  <main id="main" class="page page--narrow">
+    <header class="page-header">
+      <h1>Coin Flip</h1>
+      <p>Tap the coin or the button to flip.</p>
+    </header>
 
-    <div id="drawer">
-        <div id="drawer-header">
-            <h2>Navigation</h2>
-        </div>
-            <div id="drawer-content">
-      <a href="index.html" class="nav-link">Snake Game</a>
-      <a href="dice.html" class="nav-link">Dice</a>
-      <a href="coin.html" class="nav-link">Coin</a>
-      <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-      <a href="compare.html" class="nav-link">Text Compare</a>
-      <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-      <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-      <a href="image_converter.html" class="nav-link">Image Converter</a>
-      <a href="case-converter.html" class="nav-link">String Case Converter</a>
-      <a href="word-counter.html" class="nav-link">Word Counter</a>
-      <a href="days_calculator.html" class="nav-link">Days Calculator</a>
-      <a href="character_counter.html" class="nav-link">Character Counter</a>
-      <a href="random-generator.html" class="nav-link">Random Generator</a>
-      <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
-      <a href="image-to-pdf.html" class="nav-link">Image to PDF</a>
-      <a href="about.html" class="nav-link">About</a>
-    </div>
-    </div>
-    <div class="container">
-        <div class="coin-container">
-            <div class="coin" id="coinElement">
-                <div class="coin-front">Tails</div>
-                <div class="coin-back">Heads</div>
-            </div>
-        </div>
-    </div>
+    <section class="card">
+      <div class="coin-toss" id="coinToss">
+        <button class="coin" id="coin" type="button" aria-label="Flip the coin">
+          <span class="coin-face coin-face--heads"></span>
+          <span class="coin-face coin-face--tails"></span>
+        </button>
+      </div>
 
-    <script>
-        const coin = document.getElementById('coinElement');
-        const coinFront = document.querySelector('.coin-front');
-        const coinBack = document.querySelector('.coin-back');
-        let canFlip = true;
+      <p class="coin-result" id="result" aria-live="polite"></p>
 
-        function getRandomOutcome() {
-            return Math.random() < 0.5;
-        }
+      <button class="btn btn--primary btn--block" id="flipBtn" type="button">Flip coin</button>
 
-        coin.addEventListener('click', function () {
-            if (!canFlip) return;
-
-            canFlip = false;
-            coin.classList.add('flip-animation');
-
-            setTimeout(() => {
-                const isHeads = getRandomOutcome();
-
-                if (isHeads) {
-                    coinFront.textContent = 'Heads';
-                    coinBack.textContent = 'Heads';
-                    coin.classList.add('flipped');
-                } else {
-                    coinFront.textContent = 'Tails';
-                    coinBack.textContent = 'Tails';
-                    coin.classList.remove('flipped');
-                }
-
-                coin.classList.remove('flip-animation');
-
-                setTimeout(() => {
-                    canFlip = true;
-                }, 600);
-            }, 800);
-        });
-    </script>
-
-
+      <div class="stats">
+        <div class="stat"><span class="stat-value" id="headsCount">0</span><span class="stat-label">Heads</span></div>
+        <div class="stat"><span class="stat-value" id="tailsCount">0</span><span class="stat-label">Tails</span></div>
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>

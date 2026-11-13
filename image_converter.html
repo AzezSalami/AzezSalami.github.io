@@ -1,489 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Converter & Resizer</title>
-    <link rel="stylesheet" href="css/styles.css" />
-        <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-        }
-
-        .upload-area:hover {
-            background: #f8f9ff;
-            border-color: #764ba2;
-        }
-
-        .upload-area.dragover {
-            background: #f0f2ff;
-            border-color: #764ba2;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .dimensions {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            flex: 1;
-        }
-
-        .mode-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: 500;
-        }
-
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            background: white;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .preview {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .preview img {
-            max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .preview-label {
-            margin-bottom: 10px;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .info {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8f9ff;
-            border-radius: 5px;
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Image Converter · Tools</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🧰%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/theme.js"></script>
+  <script defer src="js/lib/ui.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/tools/image-converter.js"></script>
 </head>
+
 <body>
-    <button id="toggle-btn">☰</button>
+  <main id="main" class="page page--narrow">
+    <header class="page-header">
+      <h1>Image Converter &amp; Resizer</h1>
+      <p>Resize any image (including SVG) and export it as PNG, JPEG or WebP.</p>
+    </header>
 
-    <div id="drawer">
-        <div id="drawer-header">
-            <h2>Navigation</h2>
+    <section class="card">
+      <label class="dropzone" id="dropZone">
+        <span class="dropzone-icon" aria-hidden="true">📤</span>
+        <span id="dropLabel">Tap to choose an image, or drop one here</span>
+        <span class="dropzone-hint">Any image format your browser can open</span>
+        <input type="file" accept="image/*" class="visually-hidden" />
+      </label>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="width">Width (px)</label>
+          <input type="number" id="width" value="540" min="1" max="10000" inputmode="numeric" />
         </div>
-        <div id="drawer-content">
-            <a href="index.html" class="nav-link">Snake Game</a>
-            <a href="dice.html" class="nav-link">Dice</a>
-            <a href="coin.html" class="nav-link">Coin</a>
-            <a href="advanced-function-grapher.html" class="nav-link">Function Grapher</a>
-            <a href="compare.html" class="nav-link">Text Compare</a>
-            <a href="image-to-svg.html" class="nav-link">Image to SVG</a>
-            <a href="image-to-base64.html" class="nav-link">Image to base64</a>
-            <a href="image_converter.html" class="nav-link">Image Converter</a>
-            <a href="case-converter.html" class="nav-link">String Case Converter</a>
-            <a href="word-counter.html" class="nav-link">Word Counter</a>
-            <a href="days_calculator.html" class="nav-link">Days Calculator</a>
-            <a href="character_counter.html" class="nav-link">Character Counter</a>
-            <a href="random-generator.html" class="nav-link">Random Generator</a>
-            <a href="JWT-encoder-decoder.html" class="nav-link">JWT Encoder & Decoder</a>
-            <a href="image-to-pdf.html" class="nav-link">Image to PDF</a>
-            <a href="about.html" class="nav-link">About</a>
+        <div class="field">
+          <label for="height">Height (px)</label>
+          <input type="number" id="height" value="360" min="1" max="10000" inputmode="numeric" />
         </div>
-    </div>
-   <div class="container">
-        <h1>🖼️ Image Converter & Resizer</h1>
-        
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📤</div>
-            <p>Click to upload or drag & drop your image</p>
-            <p style="font-size: 14px; color: #999; margin-top: 5px;">Any format supported</p>
-            <input type="file" id="fileInput" accept="image/*">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="resizeMode">Resize mode</label>
+          <select id="resizeMode">
+            <option value="stretch">Stretch (fill, ignore aspect ratio)</option>
+            <option value="contain" selected>Contain (fit inside)</option>
+            <option value="cover">Cover (fill, crop overflow)</option>
+          </select>
         </div>
-
-        <div class="dimensions">
-            <div class="input-group">
-                <label for="width">Width (px)</label>
-                <input type="number" id="width" value="540" min="1">
-            </div>
-            <div class="input-group">
-                <label for="height">Height (px)</label>
-                <input type="number" id="height" value="360" min="1">
-            </div>
+        <div class="field">
+          <label for="format">Format</label>
+          <select id="format">
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+          </select>
         </div>
+      </div>
 
-        <div class="mode-group">
-            <label for="resizeMode">Resize Mode</label>
-            <select id="resizeMode">
-                <option value="stretch">Stretch (fill entire area)</option>
-                <option value="contain" selected>Contain (fit inside, keep aspect ratio)</option>
-                <option value="cover">Cover (fill area, keep aspect ratio, crop if needed)</option>
-            </select>
-        </div>
+      <button class="btn btn--primary btn--block" id="convertBtn" type="button" disabled>Convert</button>
+      <p class="alert alert--error" id="error" hidden></p>
 
-        <button class="btn" id="convertBtn" disabled>Convert to PNG</button>
-
-        <div class="preview" id="preview" style="display: none;">
-            <div class="preview-label">Converted Image:</div>
-            <img id="previewImg" alt="Converted image">
-            <div class="info" id="info"></div>
-        </div>
-    </div>
-
-    <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const widthInput = document.getElementById('width');
-        const heightInput = document.getElementById('height');
-        const resizeMode = document.getElementById('resizeMode');
-        const convertBtn = document.getElementById('convertBtn');
-        const preview = document.getElementById('preview');
-        const previewImg = document.getElementById('previewImg');
-        const info = document.getElementById('info');
-
-        let selectedFile = null;
-
-        // Click to upload
-        uploadArea.addEventListener('click', () => fileInput.click());
-
-        // Drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
-            }
-        });
-
-        // File input change
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
-        });
-
-        function handleFile(file) {
-            if (!file.type.startsWith('image/')) {
-                alert('Please upload an image file');
-                return;
-            }
-            selectedFile = file;
-            convertBtn.disabled = false;
-            uploadArea.querySelector('p').textContent = `Selected: ${file.name}`;
-        }
-
-        convertBtn.addEventListener('click', convertImage);
-
-        function isSVGFile(file) {
-            return file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
-        }
-
-        // Read SVG text and ensure it has explicit width/height when viewBox is present
-        function prepareSVGText(svgText, targetWidth, targetHeight) {
-            try {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(svgText, 'image/svg+xml');
-                const svg = doc.querySelector('svg');
-                if (!svg) return svgText;
-
-                // If viewBox exists but width/height missing, set width/height attributes
-                const vb = svg.getAttribute('viewBox');
-                const hasWidth = svg.hasAttribute('width');
-                const hasHeight = svg.hasAttribute('height');
-
-                if (vb && (!hasWidth || !hasHeight)) {
-                    // Use target dimensions to rasterize at desired size
-                    svg.setAttribute('width', targetWidth);
-                    svg.setAttribute('height', targetHeight);
-                }
-
-                // Inline CSS <style> blocks are preserved by serializing the doc
-                const serializer = new XMLSerializer();
-                return serializer.serializeToString(doc);
-            } catch (err) {
-                return svgText;
-            }
-        }
-
-        function convertImage() {
-            if (!selectedFile) return;
-
-            const targetWidth = parseInt(widthInput.value);
-            const targetHeight = parseInt(heightInput.value);
-            const mode = resizeMode.value;
-
-            if (isSVGFile(selectedFile)) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    let svgText = e.target.result;
-                    // If Data URL, extract the SVG text part
-                    if (typeof svgText === 'string' && svgText.indexOf('data:') === 0) {
-                        const comma = svgText.indexOf(',');
-                        svgText = decodeURIComponent(svgText.slice(comma + 1));
-                    }
-
-                    svgText = prepareSVGText(svgText, targetWidth, targetHeight);
-
-                    const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
-                    const img = new Image();
-
-                    img.onload = () => {
-                        // Canvas size must match the requested output dimensions exactly
-                        const canvas = document.createElement('canvas');
-                        canvas.width = targetWidth;
-                        canvas.height = targetHeight;
-                        const ctx = canvas.getContext('2d');
-
-                        // For contain/cover modes we still compute drawing rectangle using source image size
-                        let sx = 0, sy = 0, sw = img.width, sh = img.height;
-                        let dx = 0, dy = 0, dw = canvas.width, dh = canvas.height;
-
-                        if (mode === 'contain') {
-                            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-                            dw = img.width * scale;
-                            dh = img.height * scale;
-                            dx = (canvas.width - dw) / 2;
-                            dy = (canvas.height - dh) / 2;
-                        } else if (mode === 'cover') {
-                            const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-                            const scaledWidth = img.width * scale;
-                            const scaledHeight = img.height * scale;
-                            if (scaledWidth > canvas.width) {
-                                sw = img.width * (canvas.width / scaledWidth);
-                                sx = (img.width - sw) / 2;
-                            }
-                            if (scaledHeight > canvas.height) {
-                                sh = img.height * (canvas.height / scaledHeight);
-                                sy = (img.height - sh) / 2;
-                            }
-                        } else {
-                            // stretch: dw/dh remain canvas dimensions
-                        }
-
-                        ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
-
-                        canvas.toBlob((outBlob) => {
-                            const outUrl = URL.createObjectURL(outBlob);
-                            previewImg.src = outUrl;
-                            preview.style.display = 'block';
-
-                            const sizeKB = (outBlob.size / 1024).toFixed(2);
-                            const modeText = mode.charAt(0).toUpperCase() + mode.slice(1);
-                            info.textContent = `Size: ${sizeKB} KB | Dimensions: ${targetWidth}x${targetHeight}px | Format: PNG | Mode: ${modeText}`;
-
-                            const link = document.createElement('a');
-                            link.href = outUrl;
-                            link.download = `converted_${targetWidth}x${targetHeight}.png`;
-                            link.textContent = '⬇️ Download PNG';
-                            link.style.display = 'inline-block';
-                            link.style.marginTop = '15px';
-                            link.style.padding = '10px 20px';
-                            link.style.background = '#667eea';
-                            link.style.color = 'white';
-                            link.style.textDecoration = 'none';
-                            link.style.borderRadius = '5px';
-                            link.style.fontWeight = '600';
-
-                            const oldLink = info.parentElement.querySelector('a');
-                            if (oldLink) oldLink.remove();
-                            info.parentElement.appendChild(link);
-                            URL.revokeObjectURL(url);
-                        }, 'image/png');
-                    };
-                    // Important: set crossOrigin to anonymous to avoid tainting (if possible)
-                    img.crossOrigin = 'anonymous';
-                    img.src = url;
-                };
-                reader.readAsText(selectedFile);
-                return;
-            }
-
-            // Raster images (PNG/JPEG/etc.) - read as Data URL
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const cssWidth = targetWidth;
-                    const cssHeight = targetHeight;
-                    canvas.width = cssWidth;
-                    canvas.height = cssHeight;
-                    const ctx = canvas.getContext('2d');
-
-                    let sx = 0, sy = 0, sw = img.width, sh = img.height;
-                    let dx = 0, dy = 0, dw = canvas.width, dh = canvas.height;
-
-                    if (mode === 'contain') {
-                        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-                        dw = img.width * scale;
-                        dh = img.height * scale;
-                        dx = (canvas.width - dw) / 2;
-                        dy = (canvas.height - dh) / 2;
-                    } else if (mode === 'cover') {
-                        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-                        const scaledWidth = img.width * scale;
-                        const scaledHeight = img.height * scale;
-                        if (scaledWidth > canvas.width) {
-                            sw = img.width * (canvas.width / scaledWidth);
-                            sx = (img.width - sw) / 2;
-                        }
-                        if (scaledHeight > canvas.height) {
-                            sh = img.height * (canvas.height / scaledHeight);
-                            sy = (img.height - sh) / 2;
-                        }
-                    }
-
-                    ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
-
-                    canvas.toBlob((blob) => {
-                        const url = URL.createObjectURL(blob);
-                        previewImg.src = url;
-                        preview.style.display = 'block';
-
-                        const sizeKB = (blob.size / 1024).toFixed(2);
-                        const modeText = mode.charAt(0).toUpperCase() + mode.slice(1);
-                        info.textContent = `Size: ${sizeKB} KB | Dimensions: ${cssWidth}x${cssHeight}px | Format: PNG | Mode: ${modeText}`;
-
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `converted_${cssWidth}x${cssHeight}.png`;
-                        link.textContent = '⬇️ Download PNG';
-                        link.style.display = 'inline-block';
-                        link.style.marginTop = '15px';
-                        link.style.padding = '10px 20px';
-                        link.style.background = '#667eea';
-                        link.style.color = 'white';
-                        link.style.textDecoration = 'none';
-                        link.style.borderRadius = '5px';
-                        link.style.fontWeight = '600';
-
-                        const oldLink = info.parentElement.querySelector('a');
-                        if (oldLink) oldLink.remove();
-                        info.parentElement.appendChild(link);
-                    }, 'image/png');
-                };
-                img.crossOrigin = 'anonymous';
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(selectedFile);
-        }
-    </script>
-    <script src="js/main.js"></script>
+      <div id="result" class="stack" hidden>
+        <img id="previewImg" class="preview-img" alt="Converted image" />
+        <p class="muted" id="info" style="text-align: center"></p>
+        <a class="btn btn--block" id="downloadLink">⬇️ Download</a>
+      </div>
+    </section>
+  </main>
 </body>
+
 </html>
