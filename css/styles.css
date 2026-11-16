@@ -948,7 +948,7 @@ textarea:focus-visible {
   background: none;
   cursor: pointer;
   transform-style: preserve-3d;
-  transform: rotateY(var(--turn, 0deg));
+  transform: rotateX(var(--turn, 0deg));
   transition: transform 1.2s cubic-bezier(0.3, 0.1, 0.3, 1);
 }
 
@@ -970,7 +970,7 @@ textarea:focus-visible {
 .coin-face--tails {
   background-image: url("../tails-image.jpg");
   border: 5px solid #b8860b;
-  transform: rotateY(180deg);
+  transform: rotateX(180deg); /* same axis as the flip, so tails lands upright */
 }
 
 .coin-result {
